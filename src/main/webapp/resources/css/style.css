@@ -1,0 +1,43 @@
+@charset "ISO-8859-1";
+
+table, th, td {
+  border: 1px solid black;
+}
+
+#menu_title {
+	display:block;
+	padding-top: 10%;
+	text-align: center;
+}
+
+#menu_separator {
+	height:2px;
+	border-width:0;
+	color:gray;
+	background-color:gray
+}
+#filter_title{
+	display:block;
+	padding-top: 10%;
+	text-align: center;
+}
+#change_status{
+	display:block;
+	padding-top: 10%;
+	text-align: center;
+}
+.button {
+    display: block;
+    width: 115px;
+    height: 25px;
+    background: #4E9CAF;
+    padding: 10px 50px 10px 50px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px;
+    text-decoration: none;
+}

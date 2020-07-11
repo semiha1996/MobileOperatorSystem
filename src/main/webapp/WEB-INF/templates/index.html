@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" class="aui">
+<head>
+    <title>Courses System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+</head>
+<body>
+	<h1 id="menu_title" th:text="#{menu}"></h1>
+	<hr id="menu_separator" />
+	<a class="button" href="/all_courses" th:text="#{list_all_courses}"></a>
+	<a class="button" href="/change_status" th:text="#{change_status}"></a>
+	<a class="button" href="/filter_courses" th:text="#{filter_course}"></a>
+</body>
+</html>
