@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import tu.practice.mobile_system.classes.SearchTerm;
 import tu.practice.mobile_system.entity.Administrator;
 import tu.practice.mobile_system.entity.Customer;
 import tu.practice.mobile_system.service.AdministratorService;
@@ -40,12 +41,21 @@ public class MobileOperatorController {
     @Autowired
     private PayingsService payingsService;
     
-    /*
-    @GetMapping(value = "/index")
-    public String getIndexPage() {
-        return "index";
+    @GetMapping(value = "/menu")
+    public String getMenuPage(Model model) {
+
+    	model.addAttribute("searchTerm", new SearchTerm());
+    	
+        return "menu";
     }
-    */
+    
+    @GetMapping(value = "/search")
+    public String getSearchPage(@ModelAttribute SearchTerm searchTerm) {
+
+    	
+        return "menu";
+    }
+    
     @GetMapping(value = "/all_admins")
     public String getAllAdminsPage(@RequestParam Optional<String> status, Model model) {
     	List<Administrator> admins = adminService.getAllAdmins();

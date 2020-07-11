@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" class="aui">
+<head>
+    <title>Mobile Operator System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+</head>
+<body>
+	<form th:action="@{/search}" th:object="${searchTerm}" method="post">
+	
+	 <div>
+        <label class="label" style="float:left; margin-right: 10px">Search:</label>
+        <select th:field="*{searchCategory}" class="dropdown" style="float:left; margin-right: 10px">
+            <option value="Customers">Customers
+            </option>
+            <option value="Services">Services
+            </option>
+        </select>
+    </div>
+    
+    <input type="text" th:field="*{searchText}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter search term" />
+
+    <input type="submit" class="button" style="float:left; margin-right: 10px" value="Submit"/>
+</form>
+	
+</body>
+</html>
