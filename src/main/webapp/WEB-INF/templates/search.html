@@ -17,6 +17,7 @@
               <th>IBAN</th>
               <th>User Name</th>
               <th>Password</th>
+              <th>Email</th>
           </tr>
           
           <tr th:each="customer : ${customers}">
@@ -27,6 +28,7 @@
               	<td th:text="${customer.iban}">IBAN</td>
 				<td th:text="${customer.username}">User Name</td>
 				<td th:text="${customer.password}">Password</td>
+				<td th:text="${customer.email}">Email</td>
           </tr>
    	</table>
    

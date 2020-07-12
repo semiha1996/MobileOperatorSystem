@@ -27,15 +27,13 @@
 	    <div class="inputs_div">
 	        <label class="label" style="float:left; margin-right: 10px">User Name:</label>
 	        <input type="text" th:field="*{username}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer user name" />
-	    </div>
-	    <div class="inputs_div">
-	        <label class="label" style="float:left; margin-right: 10px">Password:</label>
-	        <input type="text" th:field="*{password}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer password" />
+	        <input type="hidden" th:field="*{password}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer user name" />
 	    </div>
 	    <div class="inputs_div">
 	        <label class="label" style="float:left; margin-right: 10px">E-mail:</label>
 	        <input type="text" th:field="*{email}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer e-mail" />
 	    </div>
+	    
 	    <div>
 	        <label class="label" style="float:left; margin-right: 10px">Service:</label>
 	        <select th:field="*{services[0].serviceId}" class="dropdown" style="float:left; margin-right: 10px">
