@@ -28,8 +28,24 @@ import tu.practice.mobile_system.repository.CustomerRepository;
 			return customers;
 		}
 		
-		public Long saveNewCustomer(Customer customer) {
+		public List<Customer> getCustomersById(Long id) {
+			List<Customer> customers = repository.findAllById(id);
+			return customers;
+		}
+		
+		public Long saveCustomer(Customer customer) {
 			Customer savedCustomer = repository.saveAndFlush(customer);
 			return savedCustomer.getCustomerId();
+		}
+		
+		public Long updateCustomer(Customer customer) {
+			Customer customerFromDb = repository.getOne(customer.getCustomerId());
+			if(customerFromDb != null) {
+				customerFromDb = customer;
+				Customer savedCustomer = repository.save(customer);
+				return savedCustomer.getCustomerId();
+			}
+
+			return 0L;
 		}
 }

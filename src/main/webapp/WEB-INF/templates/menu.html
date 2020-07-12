@@ -67,7 +67,7 @@
 	
 	<div style="border-left:3px solid #000;height:50%; width:5px; float:left; margin-right:10px"></div>
 	
-		<form th:action="@{/addService}" th:object="${service}" method="post" style="width:48%; float:left">
+	<form th:action="@{/addService}" th:object="${service}" method="post" style="width:48%; float:left">
 		<div class="inputs_div">
 	        <label class="label" style="float:left; margin-right: 10px">Name:</label>
 	        <input type="text" th:field="*{name}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter service name" />
@@ -94,7 +94,15 @@
 	    </div>
 	    
 	    <input type="submit" class="button" style="margin-left: 260px" value="Add Service"/>
-	    </form>
+	</form>
 	    
+	<hr id="menu_separator" style="float:left; width:100%; margin-top:5%"/>
+
+	<form th:action="@{/inquire}" th:object="${service}" method="post" style="width:100%; float:left;">
+	    <div class="inquire_div">
+	     	<label class="label1" style="float:left; margin-right: 50px; width: 300px">Reference for forthcoming payments:</label>
+	      	<input type="submit" class="button" style="margin-right: 50px" value="Inquire"/>
+	    </div>
+	</form>
 </body>
 </html>

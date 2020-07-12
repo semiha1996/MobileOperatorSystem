@@ -45,6 +45,7 @@ public class MobileOperatorController {
     @Autowired
     private PayingsService payingsService;
     
+    //menu page
     @GetMapping(value = "/menu")
     public String getMenuPage(Model model) {
     	List<MobileServiceEntity> services = mobileServiceService.getAllMobileServices();
@@ -61,7 +62,7 @@ public class MobileOperatorController {
     	model.addAttribute("service", new MobileServiceEntity());
         return "menu";
     }
-    
+    //search in category customers or services and return search page
     @PostMapping(value = "/search")
     public String getSearchPage(@ModelAttribute SearchTerm searchTerm, Model model) {
     	
@@ -78,6 +79,7 @@ public class MobileOperatorController {
         return "search";
     }
     
+    //add new customer and choose a servise to assign to him 
     @PostMapping(value = "/addCustomer")
     public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
     	List<MobileServiceEntity> mobileServices = 
@@ -89,7 +91,7 @@ public class MobileOperatorController {
     		customer.getServices().add(mobileServices.get(0));
     		mobileServiceId = mobileServices.get(0).getServiceId();
     	
-	    	Long customerId = userService.saveNewCustomer(customer);
+	    	Long customerId = userService.saveCustomer(customer);
 	    	List<CustomerServiceEntity> customerServiceEntities = 
     			customerServiceService.getAllCustomerServicesById(customerId, mobileServiceId);
 	    	
@@ -102,28 +104,43 @@ public class MobileOperatorController {
 	    		customerServiceEnt.setSmsLeft(mobileServices.get(0).getSmsNumber());
 	    		customerServiceEnt.setMinutesLeft(mobileServices.get(0).getMinutes());
 	    		
+	    		//save customer in DB
 	    		customerServiceService.saveServiceCustomerEntity(customerServiceEnt);
 	    	}
     	}
-    	
-    	
-        return "error";
+    	model.addAttribute("statusText", "User added successfully");
+        return "status";
     }
-    
+    //add a new service and save it in DB
     @PostMapping(value = "/addService")
     public String getAddServicePage(@ModelAttribute MobileServiceEntity mobileService, Model model) {
     	
     	mobileServiceService.saveNewService(mobileService);
-    	 return "error";
+    	
+    	model.addAttribute("statusText", "Service added successfully");
+        return "status";
     }
     
-    @GetMapping(value = "/all_admins")
-    public String getAllAdminsPage(@RequestParam Optional<String> status, Model model) {
-    	List<Administrator> admins = adminService.getAllAdmins();
+    @GetMapping(value = "/customer")
+    public String getCustomerPage(@RequestParam Long id, Model model) {
+    	List<Customer> customers = userService.getCustomersById(id);
+    	Customer customer = new Customer();
+    	if(customers.size() > 0) {
+    		customer = customers.get(0);
+    	}
     	
+    	model.addAttribute("customer", customer);
+        return "customer";
+    }
+    
+    @PostMapping(value = "/updateCustomer")
+    public String getUpdateCustomerPage(@ModelAttribute Customer customer, 
+    		@RequestParam Long id, Model model) {
+    	customer.setCustomerId(id);
+    	Long customerId = userService.updateCustomer(customer);
     	
-    	model.addAttribute("admins", admins);
-        return "all_courses";
+    	model.addAttribute("statusText", "Customer updated successfully");
+        return "status";
     }
     
     @GetMapping(value = "/all_customers")

@@ -12,7 +12,7 @@ public class PayingsService {
 	@Autowired
     private PayingsRepository repository;
 
-	public List<Payings> getAllMobileServices() {
+	public List<Payings> getAllPayings() {
 		List<Payings> payings = repository.findAll();
 		return payings;
 	}
