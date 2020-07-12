@@ -17,4 +17,13 @@ public class CustomerServiceService {
 		return services;
 	}
 	
+	public List<CustomerServiceEntity> getAllCustomerServicesById(Long customerId, Long serviceId) {
+		List<CustomerServiceEntity> services = repository.findAllEntitiesById(customerId, serviceId);
+		return services;
+	}
+	
+	public void saveServiceCustomerEntity(CustomerServiceEntity entity) {
+		repository.saveAndFlush(entity);
+	}
+	
 }

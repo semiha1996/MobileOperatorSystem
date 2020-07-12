@@ -10,11 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.sun.istack.Nullable;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "mobile_service")
+@Table(name = "customer_service")
 @Getter
 @Setter
 public class CustomerServiceEntity {
@@ -26,24 +28,24 @@ public class CustomerServiceEntity {
 	 @Column(name = "customer_id")
 	 private Long customerId;
 	 
-	 @Column(name = "service")
+	 @Column(name = "service_id")
 	 private Long serviceId;
 	
 	 @Column(name = "date_to_be_payed")
 	 private Long dateToBePayed;
 	 
 	 @Column(name = "megabytes_left")
-	 private int megabytesLeft;
-	    
+	 private Integer megabytesLeft;
+	 
 	 @Column(name = "sms_left")
-	 private int smsLeft;
+	 private Integer smsLeft;
 
 	 @Column(name = "minutes_left")
-	 private int minutesLeft;
+	 private Integer minutesLeft;
 	 
 	 public CustomerServiceEntity() {}
 
-	public CustomerServiceEntity(Long id, Long customerId, Long serviceId, Long dateToBePayed, int megabytesLeft,
+	 public CustomerServiceEntity(Long id, Long customerId, Long serviceId, Long dateToBePayed, int megabytesLeft,
 			int smsLeft, int minutesLeft	) {
 		super();
 		Id = id;

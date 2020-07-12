@@ -1,5 +1,6 @@
 package tu.practice.mobile_system.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import tu.practice.mobile_system.classes.SearchTerm;
 import tu.practice.mobile_system.entity.Administrator;
 import tu.practice.mobile_system.entity.Customer;
+import tu.practice.mobile_system.entity.CustomerServiceEntity;
 import tu.practice.mobile_system.entity.MobileServiceEntity;
 import tu.practice.mobile_system.service.AdministratorService;
 import tu.practice.mobile_system.service.CustomerEntityService;
@@ -82,11 +84,28 @@ public class MobileOperatorController {
     			mobileServiceService.getMobileServiceById(customer.getServices().get(0).getServiceId());
     	
     	customer.getServices().clear();
+    	Long mobileServiceId = 0L;
     	if(mobileServices.size() > 0) {
     		customer.getServices().add(mobileServices.get(0));
+    		mobileServiceId = mobileServices.get(0).getServiceId();
+    	
+	    	Long customerId = userService.saveNewCustomer(customer);
+	    	List<CustomerServiceEntity> customerServiceEntities = 
+    			customerServiceService.getAllCustomerServicesById(customerId, mobileServiceId);
+	    	
+	    	if(customerServiceEntities.size() > 0) {
+	    		CustomerServiceEntity customerServiceEnt = customerServiceEntities.get(0);
+	    		LocalDateTime date = LocalDateTime.now();
+	    		Long day = (long) date.getDayOfMonth();
+	    		customerServiceEnt.setDateToBePayed(day);
+	    		customerServiceEnt.setMegabytesLeft(mobileServices.get(0).getMegabytes());
+	    		customerServiceEnt.setSmsLeft(mobileServices.get(0).getSmsNumber());
+	    		customerServiceEnt.setMinutesLeft(mobileServices.get(0).getMinutes());
+	    		
+	    		customerServiceService.saveServiceCustomerEntity(customerServiceEnt);
+	    	}
     	}
     	
-    	userService.saveNewCustomer(customer);
     	
         return "error";
     }

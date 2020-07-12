@@ -28,7 +28,8 @@ import tu.practice.mobile_system.repository.CustomerRepository;
 			return customers;
 		}
 		
-		public void saveNewCustomer(Customer customer) {
-			repository.saveAndFlush(customer);
+		public Long saveNewCustomer(Customer customer) {
+			Customer savedCustomer = repository.saveAndFlush(customer);
+			return savedCustomer.getCustomerId();
 		}
 }
