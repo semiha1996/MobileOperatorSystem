@@ -26,9 +26,14 @@ table, th, td {
 	padding-top: 10%;
 	text-align: center;
 }
+form {
+	height:10%;
+	margin-top: 20px;
+}
 .label {
     display: block;
     height: 30px;
+    width: 100px;
     line-height: 30px;
     text-align: right;
     border-radius: 5px;
@@ -51,7 +56,7 @@ table, th, td {
 }
 .text_field {
     display: block;
-    width: 200px;
+    width: 300px;
     height: 30px;
     background: #4E9CAF;
     text-align: right;
@@ -63,7 +68,7 @@ table, th, td {
 }
 .button {
     display: block;
-    width: 100px;
+    width: 150px;
     height: 30px;
     background: #4E9CAF;
     text-align: center;
@@ -72,4 +77,7 @@ table, th, td {
     font-weight: bold;
     margin-bottom: 20px;
     text-decoration: none;
+}
+.inputs_div {
+	height:50px;
 }

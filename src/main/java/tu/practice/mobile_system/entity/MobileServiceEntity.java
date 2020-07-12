@@ -34,8 +34,8 @@ public class MobileServiceEntity {
     @Column(name = "sms_number")
     private int smsNumber;
 
-	@Column(name = "minutes_left")
-    private int minutesLeft;
+	@Column(name = "minutes")
+    private int minutes;
     
     @Column(name = "price")
     private float price;
@@ -50,14 +50,14 @@ public class MobileServiceEntity {
 	
     public MobileServiceEntity() {}
 
-    public MobileServiceEntity(Long serviceId, String name, int megabytes, int smsNumber, int minutesLeft, float price,
+    public MobileServiceEntity(Long serviceId, String name, int megabytes, int smsNumber, int minutes, float price,
 			float periodOfActivation) {
 		super();
 		this.serviceId = serviceId;
 		this.name = name;
 		this.megabytes = megabytes;
 		this.smsNumber = smsNumber;
-		this.minutesLeft = minutesLeft;
+		this.minutes = minutes;
 		this.price = price;
 		this.periodOfActivation = periodOfActivation;
 	}

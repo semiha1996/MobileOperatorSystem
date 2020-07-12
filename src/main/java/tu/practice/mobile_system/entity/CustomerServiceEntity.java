@@ -32,14 +32,27 @@ public class CustomerServiceEntity {
 	 @Column(name = "date_to_be_payed")
 	 private Long dateToBePayed;
 	 
+	 @Column(name = "megabytes_left")
+	 private int megabytesLeft;
+	    
+	 @Column(name = "sms_left")
+	 private int smsLeft;
+
+	 @Column(name = "minutes_left")
+	 private int minutesLeft;
+	 
 	 public CustomerServiceEntity() {}
 
-	public CustomerServiceEntity(Long id, Long customerId, Long serviceId, Long dateToBePayed) {
+	public CustomerServiceEntity(Long id, Long customerId, Long serviceId, Long dateToBePayed, int megabytesLeft,
+			int smsLeft, int minutesLeft	) {
 		super();
 		Id = id;
 		this.customerId = customerId;
 		this.serviceId = serviceId;
 		this.dateToBePayed = dateToBePayed;
+		this.megabytesLeft = megabytesLeft;
+		this.smsLeft = smsLeft;
+		this.minutesLeft = minutesLeft;
 	}
 	 
 	 @OneToMany(mappedBy = "customerServiceRelations")

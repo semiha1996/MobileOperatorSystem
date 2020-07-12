@@ -22,4 +22,9 @@ import tu.practice.mobile_system.repository.CustomerRepository;
 			List<Customer> customers = repository.findAll();
 			return customers;
 		}
+		
+		public List<Customer> getCustomersByNameOrPhone(String searchTerm) {
+			List<Customer> customers = repository.findAllByNameOrPhone(searchTerm);
+			return customers;
+		}
 }

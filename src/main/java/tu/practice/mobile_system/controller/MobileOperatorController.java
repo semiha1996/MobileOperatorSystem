@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import tu.practice.mobile_system.classes.SearchTerm;
 import tu.practice.mobile_system.entity.Administrator;
 import tu.practice.mobile_system.entity.Customer;
+import tu.practice.mobile_system.entity.MobileServiceEntity;
 import tu.practice.mobile_system.service.AdministratorService;
 import tu.practice.mobile_system.service.CustomerEntityService;
 //import tu.practice.mobile_system.entity.Course;
@@ -43,17 +44,29 @@ public class MobileOperatorController {
     
     @GetMapping(value = "/menu")
     public String getMenuPage(Model model) {
-
+    	List<MobileServiceEntity> services = mobileServiceService.getAllMobileServices();
+		model.addAttribute("services", services);
+    	
     	model.addAttribute("searchTerm", new SearchTerm());
+    	model.addAttribute("customer", new Customer());
     	
         return "menu";
     }
     
-    @GetMapping(value = "/search")
-    public String getSearchPage(@ModelAttribute SearchTerm searchTerm) {
-
+    @PostMapping(value = "/search")
+    public String getSearchPage(@ModelAttribute SearchTerm searchTerm, Model model) {
     	
-        return "menu";
+    	if(searchTerm.getSearchCategory().equals("Customers")) {
+    		List<Customer> customers = userService.getCustomersByNameOrPhone(searchTerm.getSearchText().toLowerCase());
+        	model.addAttribute("customers", customers);
+    	}
+    	else {
+    		List<MobileServiceEntity> services = mobileServiceService.getAllMobileServices();
+    		model.addAttribute("services", services);
+    	}
+    	
+    	model.addAttribute("searchTerm", searchTerm);
+        return "search";
     }
     
     @GetMapping(value = "/all_admins")
