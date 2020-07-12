@@ -22,7 +22,7 @@ import tu.practice.mobile_system.entity.MobileServiceEntity;
 public class MobileServiceEntity {
 	@Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long serviceId;
     
     @Column(name = "name")

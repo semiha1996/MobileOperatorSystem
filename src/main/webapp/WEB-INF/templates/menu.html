@@ -26,7 +26,7 @@
 	
 	<hr id="menu_separator"/>
 
-	<form th:action="@{/addCustomer}" th:object="${customer}" method="post">
+	<form th:action="@{/addCustomer}" th:object="${customer}" method="post" style="width:48%; float:left">
 		<div class="inputs_div">
 	        <label class="label" style="float:left; margin-right: 10px">Name:</label>
 	        <input type="text" th:field="*{name}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer name" />
@@ -51,14 +51,50 @@
 	        <label class="label" style="float:left; margin-right: 10px">Password:</label>
 	        <input type="text" th:field="*{password}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer password" />
 	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">E-mail:</label>
+	        <input type="text" th:field="*{email}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter customer e-mail" />
+	    </div>
 	    <div>
 	        <label class="label" style="float:left; margin-right: 10px">Service:</label>
-	        <select th:field="*{services}" class="dropdown" style="float:left; margin-right: 10px">
-	            <option th:each="service : ${services}" th:value="${service}" th:text="${service.name}" 
-      					th:selected="${service.serviceId==1}"></option>
+	        <select th:field="*{services[0].serviceId}" class="dropdown" style="float:left; margin-right: 10px">
+	            <option th:each="service : ${services}" th:value="${service.serviceId}" th:text="${service.name}" >
+	            </option>
 	        </select>
 	    </div>
 	    <input type="submit" class="button" value="Add Customer"/>
 	</form>
+	
+	<div style="border-left:3px solid #000;height:50%; width:5px; float:left; margin-right:10px"></div>
+	
+		<form th:action="@{/addService}" th:object="${service}" method="post" style="width:48%; float:left">
+		<div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">Name:</label>
+	        <input type="text" th:field="*{name}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter service name" />
+	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">Activation Period:</label>
+	        <input type="text" th:field="*{periodOfActivation}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter period" />
+	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">Minutes:</label>
+	        <input type="text" th:field="*{minutes}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter minutes" />
+	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">Megabytes:</label>
+	        <input type="text" th:field="*{megabytes}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter megabytes" />
+	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">SMS:</label>
+	        <input type="text" th:field="*{smsNumber}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter sms number" />
+	    </div>
+	    <div class="inputs_div">
+	        <label class="label" style="float:left; margin-right: 10px">Price:</label>
+	        <input type="text" th:field="*{price}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter service price" />
+	    </div>
+	    
+	    <input type="submit" class="button" style="margin-left: 260px" value="Add Service"/>
+	    </form>
+	    
 </body>
 </html>

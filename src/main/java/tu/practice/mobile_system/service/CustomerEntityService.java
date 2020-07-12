@@ -27,4 +27,8 @@ import tu.practice.mobile_system.repository.CustomerRepository;
 			List<Customer> customers = repository.findAllByNameOrPhone(searchTerm);
 			return customers;
 		}
+		
+		public void saveNewCustomer(Customer customer) {
+			repository.saveAndFlush(customer);
+		}
 }

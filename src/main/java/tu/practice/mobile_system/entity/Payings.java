@@ -22,7 +22,7 @@ import lombok.Setter;
 public class Payings {
 	@Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
 	 @Column(name = "date_of_paying")

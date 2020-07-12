@@ -11,7 +11,7 @@ import tu.practice.mobile_system.entity.MobileServiceEntity;
 
 @Repository
 public interface MobileServiceRepository extends JpaRepository<MobileServiceEntity, Long>{
-	@Query("SELECT a FROM MobileServiceEntity a WHERE a.name LIKE %:searchName%  ")
-	  List<String> findDistinctEvents(@Param("searchName") String searchName);
+	@Query("SELECT a FROM MobileServiceEntity a WHERE a.serviceId = :id")
+	List<MobileServiceEntity> getServiceById(@Param("id") Long id);
 
 }

@@ -1,5 +1,6 @@
 package tu.practice.mobile_system.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
@@ -46,10 +47,16 @@ public class MobileOperatorController {
     public String getMenuPage(Model model) {
     	List<MobileServiceEntity> services = mobileServiceService.getAllMobileServices();
 		model.addAttribute("services", services);
-    	
+		
     	model.addAttribute("searchTerm", new SearchTerm());
-    	model.addAttribute("customer", new Customer());
     	
+    	Customer customer = new Customer();
+    	customer.setServices(new ArrayList<MobileServiceEntity>());
+    	customer.getServices().add(new MobileServiceEntity());
+    	model.addAttribute("customer", customer);
+    	
+    	model.addAttribute("serviceName", new String());
+    	model.addAttribute("service", new MobileServiceEntity());
         return "menu";
     }
     
@@ -67,6 +74,28 @@ public class MobileOperatorController {
     	
     	model.addAttribute("searchTerm", searchTerm);
         return "search";
+    }
+    
+    @PostMapping(value = "/addCustomer")
+    public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
+    	List<MobileServiceEntity> mobileServices = 
+    			mobileServiceService.getMobileServiceById(customer.getServices().get(0).getServiceId());
+    	
+    	customer.getServices().clear();
+    	if(mobileServices.size() > 0) {
+    		customer.getServices().add(mobileServices.get(0));
+    	}
+    	
+    	userService.saveNewCustomer(customer);
+    	
+        return "error";
+    }
+    
+    @PostMapping(value = "/addService")
+    public String getAddServicePage(@ModelAttribute MobileServiceEntity mobileService, Model model) {
+    	
+    	mobileServiceService.saveNewService(mobileService);
+    	 return "error";
     }
     
     @GetMapping(value = "/all_admins")

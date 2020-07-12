@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import tu.practice.mobile_system.entity.Customer;
 import tu.practice.mobile_system.entity.MobileServiceEntity;
 import tu.practice.mobile_system.repository.MobileServiceRepository;
 
@@ -15,5 +17,13 @@ public class MobileServiceService {
 	public List<MobileServiceEntity> getAllMobileServices() {
 		List<MobileServiceEntity> services = repository.findAll();
 		return services;
+	}
+	
+	public List<MobileServiceEntity> getMobileServiceById(Long id) {
+		return repository.getServiceById(id);
+	}
+	
+	public void saveNewService(MobileServiceEntity mobileService) {
+		repository.saveAndFlush(mobileService);
 	}
 }

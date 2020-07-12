@@ -1,5 +1,6 @@
 package tu.practice.mobile_system.entity;
 
+import java.beans.Transient;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,7 +27,7 @@ import lombok.Setter;
 		
 	    @Id
 	    @Column(name = "id")
-	    @GeneratedValue(strategy = GenerationType.AUTO)
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long customerId;
 	    
 	    @Column(name = "name")
@@ -47,6 +48,9 @@ import lombok.Setter;
 	    @Column(name = "password")
 	    private String password;
 
+	    @Column(name = "email")
+	    private String email;
+
 	    //for table admin_customer
 	    @ManyToMany(mappedBy = "customers")
 	    private List<Administrator> admins;
@@ -64,7 +68,7 @@ import lombok.Setter;
 	    }
 	    
 		public Customer(Long userId, String name, String phone, String iban, String address,
-				String username, String password, List<Administrator> admins, List <MobileServiceEntity> services) {
+				String username, String password,String email, List<Administrator> admins, List <MobileServiceEntity> services) {
 			super();
 
 		}
