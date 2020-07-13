@@ -96,12 +96,21 @@
 	    <input type="submit" class="button" style="margin-left: 260px" value="Add Service"/>
 	</form>
 	    
-	<hr id="menu_separator" style="float:left; width:100%; margin-top:5%"/>
+	<hr id="menu_separator" style="float:left; width:110%; margin-top:3%"/>
 
 	<form th:action="@{/inquire}" th:object="${service}" method="post" style="width:100%; float:left;">
 	    <div class="inquire_div">
 	     	<label class="label1" style="float:left; margin-right: 50px; width: 300px">Reference for forthcoming payments:</label>
 	      	<input type="submit" class="button" style="margin-right: 50px" value="Inquire"/>
+	    </div>
+	</form>
+	
+	<hr id="menu_separator" style="float:left; width:110%; margin-top:1%"/>
+
+	<form th:action="@{/exit}" th:object="${service}" method="post" style="width:100%; float:left;">
+	    <div class="exit_div">
+	    	<label class="label1" style="float:left; margin-right: 10px; width: 120px">Exit here:</label>
+	      	<input type="submit" class="button" style="margin-right: 10px" value="Log out"/>
 	    </div>
 	</form>
 </body>

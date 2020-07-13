@@ -1,57 +1,60 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" class="aui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://thymeleaf.org" class="aui">
 <head>
-    <title>Courses System</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+<title>Courses System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" type="text/css"
+	href="../../resources/css/style.css" />
 </head>
 <body>
-	
+
 	<table th:if="${searchTerm.searchCategory == 'Customers'}">
-          <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Phone</th>
-              <th>IBAN</th>
-              <th>User Name</th>
-              <th>Password</th>
-              <th>Email</th>
-          </tr>
-          
-          <tr th:each="customer : ${customers}">
-              	<td th:text="${customer.customerId}">Id</td>
-              	<td><a th:text="${customer.name}" th:href="@{|/customer?id=${customer.customerId}|}"></a></td>
-              	<td th:text="${customer.address}">Address</td>
-              	<td th:text="${customer.phone}">Phone</td>
-              	<td th:text="${customer.iban}">IBAN</td>
-				<td th:text="${customer.username}">User Name</td>
-				<td th:text="${customer.password}">Password</td>
-				<td th:text="${customer.email}">Email</td>
-          </tr>
-   	</table>
-   
-   <table th:if="${searchTerm.searchCategory == 'Services'}">
-          <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Megabytes</th>
-              <th>SMS</th>
-              <th>Minutes</th>
-              <th>Price</th>
-              <th>Period Activation</th>
-          </tr>
-          
-          <tr th:each="service : ${services}">
-              	<td th:text="${service.serviceId}">Id</td>
-				<td th:text="${service.name}">Name</td>
-				<td th:text="${service.megabytes}">Megabytes</td>
-				<td th:text="${service.smsNumber}">SMS</td>
-				<td th:text="${service.minutes}">Minutes</td>
-				<td th:text="${service.price}">Price</td>
-				<td th:text="${service.periodOfActivation}">Period Activation</td>
-          </tr>
-   	</table>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Address</th>
+			<th>Phone</th>
+			<th>IBAN</th>
+			<th>User Name</th>
+			<th>Password</th>
+			<th>Email</th>
+		</tr>
+
+		<tr th:each="customer : ${customers}">
+			<td th:text="${customer.customerId}">Id</td>
+			<td><a th:text="${customer.name}"
+				th:href="@{|/customer?id=${customer.customerId}|}"></a></td>
+			<td th:text="${customer.address}">Address</td>
+			<td th:text="${customer.phone}">Phone</td>
+			<td th:text="${customer.iban}">IBAN</td>
+			<td th:text="${customer.username}">User Name</td>
+			<td th:text="${customer.password}">Password</td>
+			<td th:text="${customer.email}">Email</td>
+		</tr>
+	</table>
+
+	<table th:if="${searchTerm.searchCategory == 'Services'}">
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Megabytes</th>
+			<th>SMS</th>
+			<th>Minutes</th>
+			<th>Price</th>
+			<th>Period Activation</th>
+		</tr>
+
+		<tr th:each="service : ${services}">
+			<td th:text="${service.serviceId}">Id</td>
+			<td th:text="${service.name}">Name</td>
+			<td th:text="${service.megabytes}">Megabytes</td>
+			<td th:text="${service.smsNumber}">SMS</td>
+			<td th:text="${service.minutes}">Minutes</td>
+			<td th:text="${service.price}">Price</td>
+			<td th:text="${service.periodOfActivation}">Period Activation</td>
+		</tr>
+	</table>
 </body>
 </html>

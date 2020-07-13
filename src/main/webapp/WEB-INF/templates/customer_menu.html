@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Customer Service System</title>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+</head>
+<body>
+		 <div>
+		 <h4>Active Services</h4>
+	        <label class="label" style="float:left; margin-right: 10px">Choose Service:</label>
+	        <select th:field="*{services[0].serviceId}" class="dropdown" style="float:left; margin-right: 10px">
+	            <option th:each="service : ${services}" th:value="${service.serviceId}" th:text="${service.name}" >
+	            </option>
+	        </select>
+	         <input type="submit" class="button" style="float:left; margin-right: 10px" value="Show"/>
+	    </div>
+	<hr id="menu_separator"/>
+	<div>
+		<h4>Information about your current service state</h4>
+	      <label class="label" style="float:left; margin-right: 10px">Enter phone/(name):</label>
+		 <input type="text" th:field="*{searchText}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter search term" />
+		<input type="submit" class="button" style="float:left; margin-right: 10px" value="Search"/>
+	</div>
+	<hr id="menu_separator"/>
+</body>
+</html>
