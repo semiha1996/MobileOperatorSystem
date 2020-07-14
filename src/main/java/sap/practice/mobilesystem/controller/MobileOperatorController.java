@@ -2,12 +2,10 @@ package sap.practice.mobilesystem.controller;
 
 import java.time.LocalDateTime;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
@@ -26,8 +24,9 @@ import sap.practice.mobilesystem.service.CustomerMobilePlanService;
 import sap.practice.mobilesystem.service.CustomerService;
 import sap.practice.mobilesystem.service.MobilePlanService;
 import sap.practice.mobilesystem.service.PayingsService;
+import sap.practice.mobilesystem.utilities.PlanId;
 import sap.practice.mobilesystem.utilities.SearchTerm;
-
+import sap.practice.mobilesystem.utilities.User;
 
 @Controller
 public class MobileOperatorController {
@@ -47,10 +46,11 @@ public class MobileOperatorController {
 	private PayingsService payingsService;
 
 	// menu page
+	// service(s) <==> mobilePlan(s)
 	@GetMapping(value = "/menu")
 	public String getMenuPage(Model model) {
-		List<MobilePlan> services = mobilePlanService.getAllMobileServices();
-		model.addAttribute("services", services);
+		List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
+		model.addAttribute("services", mobilePlans);
 
 		model.addAttribute("searchTerm", new SearchTerm());
 
@@ -72,8 +72,9 @@ public class MobileOperatorController {
 			List<Customer> customers = userService.getCustomersByNameOrPhone(searchTerm.getSearchText().toLowerCase());
 			model.addAttribute("customers", customers);
 		} else {
-			List<MobilePlan> services = mobilePlanService.getAllMobileServicesByName(searchTerm.getSearchText().toLowerCase());
-			model.addAttribute("services", services);
+			List<MobilePlan> mobilePlans = mobilePlanService
+					.getAllMobilePlansByName(searchTerm.getSearchText().toLowerCase());
+			model.addAttribute("services", mobilePlans);
 		}
 
 		model.addAttribute("searchTerm", searchTerm);
@@ -83,26 +84,27 @@ public class MobileOperatorController {
 	// add new customer and choose a service to assign to him
 	@PostMapping(value = "/addCustomer")
 	public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
-		List<MobilePlan> mobileServices = mobilePlanService
-				.getMobileServiceById(customer.getServices().get(0).getServiceId());
+		List<MobilePlan> mobilePlans = mobilePlanService
+				.getMobilePlansById(customer.getServices().get(0).getServiceId());
 
 		customer.getServices().clear();
 		Long mobileServiceId = 0L;
-		if (mobileServices.size() > 0) {
-			customer.getServices().add(mobileServices.get(0));
-			mobileServiceId = mobileServices.get(0).getServiceId();
+		if (mobilePlans.size() > 0) {
+			customer.getServices().add(mobilePlans.get(0));
+			mobileServiceId = mobilePlans.get(0).getServiceId();
 
 			Long customerId = userService.saveCustomer(customer);
-			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService.getAllCustomerServicesById(customerId, mobileServiceId);
+			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
+					.getAllCustomerMobilePlansById(customerId, mobileServiceId);
 
 			if (customerServiceEntities.size() > 0) {
 				CustomerMobilePlan customerServiceEnt = customerServiceEntities.get(0);
 				LocalDateTime date = LocalDateTime.now();
 				Long day = (long) date.getDayOfMonth();
 				customerServiceEnt.setDateToBePayed(day);
-				customerServiceEnt.setMegabytesLeft(mobileServices.get(0).getMegabytes());
-				customerServiceEnt.setSmsLeft(mobileServices.get(0).getSmsNumber());
-				customerServiceEnt.setMinutesLeft(mobileServices.get(0).getMinutes());
+				customerServiceEnt.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
+				customerServiceEnt.setSmsLeft(mobilePlans.get(0).getSmsNumber());
+				customerServiceEnt.setMinutesLeft(mobilePlans.get(0).getMinutes());
 
 				// save customer in DB
 				customerMobilePlanService.saveCustomerMobilePlanEntity(customerServiceEnt);
@@ -116,7 +118,7 @@ public class MobileOperatorController {
 	@PostMapping(value = "/addService")
 	public String getAddServicePage(@ModelAttribute MobilePlan mobileService, Model model) {
 
-		mobilePlanService.saveNewService(mobileService);
+		mobilePlanService.saveNewMobilePlan(mobileService);
 
 		model.addAttribute("statusText", "Service added successfully");
 		return "status";
@@ -129,26 +131,48 @@ public class MobileOperatorController {
 		if (customers.size() > 0) {
 			customer = customers.get(0);
 		}
+		PlanId currentPlanId = new PlanId();
+		currentPlanId.setPlanId(customer.getServices().get(0).getServiceId());
 		model.addAttribute("customer", customer);
+		model.addAttribute("customerCurrentPlanId", currentPlanId);
 		
-		List<MobilePlan> services = mobilePlanService.getAllMobileServices();
-		model.addAttribute("services", services);
-		
+		System.out.println(currentPlanId.getPlanId());
+
+		List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
+		model.addAttribute("services", mobilePlans);
+
 		return "customer";
 	}
 
 	@PostMapping(value = "/updateCustomer")
-	public String getUpdateCustomerPage(@ModelAttribute Customer customer, @RequestParam Long id, Model model) {
+	public String getUpdateCustomerPage(@ModelAttribute Customer customer, @ModelAttribute PlanId customerCurrentPlanId,
+			@RequestParam Long id, Model model) {
 		customer.setCustomerId(id);
 		Long newServiceId = customer.getServices().get(0).getServiceId();
 
-		List<MobilePlan> mobilePlans = mobilePlanService.getMobileServiceById(newServiceId);
-		if(mobilePlans.size() > 0) {
+		CustomerMobilePlan customerMobilePlan = new CustomerMobilePlan();
+		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
+		if (mobilePlans.size() > 0) {
+			MobilePlan newMobilePlan = mobilePlans.get(0);
+			
+			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
+					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
+
+			if (customerServiceEntities.size() > 0) {
+				customerMobilePlan = customerServiceEntities.get(0);
+				customerMobilePlan.setServiceId(newMobilePlan.getServiceId());
+				customerMobilePlan.setMegabytesLeft(newMobilePlan.getMegabytes());
+				customerMobilePlan.setSmsLeft(newMobilePlan.getSmsNumber());
+				customerMobilePlan.setMinutesLeft(newMobilePlan.getMinutes());
+			}
+			
 			customer.getServices().clear();
-			customer.getServices().add(mobilePlans.get(0));
+			customer.getServices().add(newMobilePlan);
 		}
-		
+
+		customerMobilePlanService.saveCustomerMobilePlanEntity(customerMobilePlan);
 		userService.updateCustomer(customer);
+		
 
 		model.addAttribute("statusText", "Customer updated successfully");
 		return "status";
@@ -162,18 +186,48 @@ public class MobileOperatorController {
 		return "all_courses";
 	}
 
-	/*
-	// customerMenu page, get all active services and show their properties
+	// customerMenu page, get customer's current services and show their properties
 	@GetMapping(value = "/customer_menu")
-	public String getCustomerMenuPage(@ModelAttribute MobilePlan service, Model model) {
+	public String getCustomerMenuPage(Model model) {
 
-		List<MobilePlan> services = mobilePlanService.getAllMobileServices();
-		model.addAttribute("services", services);
+		List<Customer> customers = userService.getCustomersById(2L);
+		Customer customer = new Customer();
+		if (customers.size() > 0) {
+			customer = customers.get(0);
+		}
+		model.addAttribute("customer", customer);
 
+		MobilePlan mobilePlan = new MobilePlan();
+		CustomerMobilePlan customerPlan = new CustomerMobilePlan();
+		if (customer.getServices() != null && customer.getServices().size() > 0) {
+			mobilePlan = customer.getServices().get(0);
+
+			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
+					.getAllCustomerMobilePlansById(customer.getCustomerId(), mobilePlan.getServiceId());
+
+			if (customerServiceEntities.size() > 0) {
+				customerPlan = customerServiceEntities.get(0);
+			}
+		}
+		model.addAttribute("service", mobilePlan);
+		model.addAttribute("customerPlan", customerPlan);
+		
 		return "customer_menu";
 	}
 
-	
+	@GetMapping(value = "/index")
+	public String getHomePage(Model model) {
+		return "index";
+	}
+
+	@PostMapping(value = "/login")
+	public String getLogin(@ModelAttribute User user, Model model) {
+		model.addAttribute("username", new String());
+		model.addAttribute("password", new String());
+
+		return "/login";
+	}
+	/*
 	 * protected void configure(final HttpSecurity http) throws Exception { http
 	 * .formLogin() .loginPage("/login.html") .failureUrl("/login-error.html")
 	 * .and() .logout() .logoutSuccessUrl("/index.html"); }
@@ -186,17 +240,12 @@ public class MobileOperatorController {
 	 * @PostMapping(value = "/login") public String login(@ModelAttribute username,
 	 * String password, Model model) { model.addAttribute(username, password);
 	 * return "/login"; }
-	
-	@RequestMapping("/login.html")
-	public String login() {
-		return "login.html";
-	}
-
-	// Login form with error
-	@PostMapping(value = "/error")
-	public String loginError(Model model) {
-		model.addAttribute("loginError", true);
-		return "login";
-	}
- */
+	 * 
+	 * @RequestMapping("/login.html") public String login() { return "login.html"; }
+	 * 
+	 * // Login form with error
+	 * 
+	 * @PostMapping(value = "/error") public String loginError(Model model) {
+	 * model.addAttribute("loginError", true); return "login"; }
+	 */
 }

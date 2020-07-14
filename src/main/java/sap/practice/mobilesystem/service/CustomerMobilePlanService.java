@@ -12,12 +12,12 @@ public class CustomerMobilePlanService {
 	@Autowired
 	private CustomerMobilePlanRepository repository;
 
-	public List<CustomerMobilePlan> getAllCustomerServices() {
+	public List<CustomerMobilePlan> getAllCustomerMobilePlans() {
 		List<CustomerMobilePlan> services = repository.findAll();
 		return services;
 	}
 
-	public List<CustomerMobilePlan> getAllCustomerServicesById(Long customerId, Long serviceId) {
+	public List<CustomerMobilePlan> getAllCustomerMobilePlansById(Long customerId, Long serviceId) {
 		List<CustomerMobilePlan> services = repository.findAllEntitiesById(customerId, serviceId);
 		return services;
 	}

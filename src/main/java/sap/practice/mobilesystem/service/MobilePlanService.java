@@ -13,21 +13,21 @@ public class MobilePlanService {
 	@Autowired
 	private MobilePlanRepository repository;
 
-	public List<MobilePlan> getAllMobileServices() {
+	public List<MobilePlan> getAllMobilePlans() {
 		List<MobilePlan> services = repository.findAll();
 		return services;
 	}
 	
-	public List<MobilePlan> getAllMobileServicesByName(String searchTerm) {
+	public List<MobilePlan> getAllMobilePlansByName(String searchTerm) {
 		List<MobilePlan> services = repository.getAllPlansByName(searchTerm);
 		return services;
 	}
 
-	public List<MobilePlan> getMobileServiceById(Long id) {
+	public List<MobilePlan> getMobilePlansById(Long id) {
 		return repository.getPlanById(id);
 	}
 
-	public void saveNewService(MobilePlan mobileService) {
+	public void saveNewMobilePlan(MobilePlan mobileService) {
 		repository.saveAndFlush(mobileService);
 	}
 }

@@ -3,28 +3,119 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Customer Service System</title>
- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" type="text/css"
+	href="../../resources/css/style.css" />
 </head>
 <body>
-		 <div>
-		 <h4>Active Services</h4>
-	        <label class="label" style="float:left; margin-right: 10px">Choose Service:</label>
-	        <select th:field="*{services[0].serviceId}" class="dropdown" style="float:left; margin-right: 10px">
-	            <option th:each="service : ${services}" th:value="${service.serviceId}" th:text="${service.name}" >
-	            </option>
-	        </select>
-	         <input type="submit" class="button" style="float:left; margin-right: 10px" value="Show"/>
-	    </div>
-	<hr id="menu_separator"/>
 	<div>
-		<h4>Information about your current service state</h4>
-	      <label class="label" style="float:left; margin-right: 10px">Enter phone/(name):</label>
-		 <input type="text" th:field="*{searchText}" class="text_field" style="float:left; margin-right: 10px" placeholder="Enter search term" />
-		<input type="submit" class="button" style="float:left; margin-right: 10px" value="Search"/>
+		<h3 th:text="'Hello, '  + ${customer.name}"></h3>
+		<label class="label_menu">Your current mobile plan:</label>
+		<table>
+			<tr>
+				<th>Id</th>
+				<th>Name</th>
+				<th>Megabytes</th>
+				<th>SMS</th>
+				<th>Minutes</th>
+				<th>Price</th>
+				<th>Period Activation</th>
+			</tr>
+			<tr>
+			    <td th:text="${service.serviceId}">Id</td>
+				<td th:text="${service.name}">Name</td>
+				<td th:text="${service.megabytes}">Megabytes</td>
+				<td th:text="${service.smsNumber}">SMS</td>
+				<td th:text="${service.minutes}">Minutes</td>
+				<td th:text="${service.price}">Price</td>
+				<td th:text="${service.periodOfActivation}">Period Activation</td>
+			</tr>
+		</table>
 	</div>
-	<hr id="menu_separator"/>
+	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.21%" />/>
+	<div>
+		<label class="label_menu">Left:</label>
+		<table>
+			<tr>
+				<th>Megabytes</th>
+				<th>SMS</th>
+				<th>Minutes</th>
+			</tr>
+			<tr>
+				<td th:text="${customerPlan.megabytesLeft}">Megabytes</td>
+				<td th:text="${customerPlan.smsLeft}">SMS</td>
+				<td th:text="${customerPlan.minutesLeft}">Minutes</td>
+			</tr>
+		</table>
+	</div>
+
+	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.1%" />>
+	<div>
+		<label class="label_menu">You should pay until:</label>
+	</div>
+
+
+	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.09%" />
+
+
+
+	<form th:action="@{/updateCustomerData}" th:object="${customer}"
+		method="post" style="width: 48%; float: left">
+		<div class="inputs_div">
+			<label class="label_menu">Name:</label> <input type="text"
+				th:field="*{name}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer name" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">Address:</label> <input type="text"
+				th:field="*{address}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer address" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">Phone:</label> <input type="text"
+				th:field="*{phone}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer phone" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">IBAN:</label> <input type="text"
+				th:field="*{iban}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer IBAN" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">User Name:</label> <input type="text"
+				th:field="*{username}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer user name" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">Password:</label> <input type="password"
+				th:field="*{password}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer password" />
+		</div>
+		<div class="inputs_div">
+			<label class="label_menu">E-mail:</label> <input type="text"
+				th:field="*{email}" class="text_field"
+				style="float: left; margin-right: 10px"
+				placeholder="Enter customer e-mail" />
+		</div>
+		<input type="submit" class="button" value="Update Info" />
+	</form>
+
+	<hr id="menu_separator "
+		style="float: left; width: 110%; margin-top: 0.31%" />
+
+	<form th:action="@{/exit}" th:object="${service}" method="post"
+		style="width: 100%; float: left;">
+		<div class="exit_div">
+			<a th:href="@{|/index|}" class="button">Log out</a>
+		</div>
+	</form>
 </body>
 </html>
