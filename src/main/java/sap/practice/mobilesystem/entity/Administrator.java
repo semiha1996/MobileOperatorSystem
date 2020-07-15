@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import sap.practice.mobilesystem.entity.Administrator;
@@ -12,6 +13,7 @@ import sap.practice.mobilesystem.entity.Administrator;
 @Table(name = "administrator")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Administrator {
 
 	@Id

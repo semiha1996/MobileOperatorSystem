@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +22,7 @@ import lombok.Setter;
 @Table(name = "customer")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Customer {
 
 	@Id
@@ -53,16 +56,16 @@ public class Customer {
 	private List<Administrator> admins;
 
 	// for table customer_service
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinTable(name = "customer_service", joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"))
-	private List<MobilePlan> services;
+	private MobilePlan services;
 
 	public Customer() {
 
 	}
 
 	public Customer(Long userId, String name, String phone, String iban, String address, String username,
-			String password, String email, List<Administrator> admins, List<MobilePlan> services) {
+			String password, String email, List<Administrator> admins, MobilePlan services) {
 		super();
 
 	}

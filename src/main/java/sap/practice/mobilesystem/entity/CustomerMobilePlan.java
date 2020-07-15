@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Table(name = "customer_service")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class CustomerMobilePlan {
 	@Id
 	@Column(name = "id")

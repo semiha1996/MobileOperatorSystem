@@ -60,8 +60,8 @@ public class MobileOperatorController {
 		model.addAttribute("searchTerm", new SearchTerm());
 
 		Customer customer = new Customer();
-		customer.setServices(new ArrayList<MobilePlan>());
-		customer.getServices().add(new MobilePlan());
+		customer.setServices(new MobilePlan());
+		
 		model.addAttribute("customer", customer);
 
 		model.addAttribute("serviceName", new String());
@@ -90,12 +90,11 @@ public class MobileOperatorController {
 	@PostMapping(value = "/addCustomer")
 	public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
 		List<MobilePlan> mobilePlans = mobilePlanService
-				.getMobilePlansById(customer.getServices().get(0).getServiceId());
+				.getMobilePlansById(customer.getServices().getServiceId());
 
-		customer.getServices().clear();
 		Long mobileServiceId = 0L;
 		if (mobilePlans.size() > 0) {
-			customer.getServices().add(mobilePlans.get(0));
+			customer.setServices(mobilePlans.get(0));
 			mobileServiceId = mobilePlans.get(0).getServiceId();
 
 			Long customerId = userService.saveCustomer(customer);
@@ -149,7 +148,7 @@ public class MobileOperatorController {
 			customer = customers.get(0);
 		}
 		CustomerPlanId currentPlanId = new CustomerPlanId();
-		currentPlanId.setPlanId(customer.getServices().get(0).getServiceId());
+		currentPlanId.setPlanId(customer.getServices().getServiceId());
 		model.addAttribute("customer", customer);
 		model.addAttribute("customerCurrentPlanId", currentPlanId);
 
@@ -163,7 +162,7 @@ public class MobileOperatorController {
 	public String getUpdateCustomerPage(@ModelAttribute Customer customer,
 			@ModelAttribute CustomerPlanId customerCurrentPlanId, @RequestParam Long id, Model model) {
 		customer.setCustomerId(id);
-		Long newServiceId = customer.getServices().get(0).getServiceId();
+		Long newServiceId = customer.getServices().getServiceId();
 
 		CustomerMobilePlan customerMobilePlan = new CustomerMobilePlan();
 		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
@@ -171,9 +170,10 @@ public class MobileOperatorController {
 
 			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
+			
+			System.out.println(customerServiceEntities.get(0).getId());
 
-			customer.getServices().clear();
-			customer.getServices().add(mobilePlans.get(0));
+			customer.setServices(mobilePlans.get(0));
 		}
 
 		userService.updateCustomer(customer);
@@ -203,8 +203,8 @@ public class MobileOperatorController {
 
 		MobilePlan mobilePlan = new MobilePlan();
 		CustomerMobilePlan customerPlan = new CustomerMobilePlan();
-		if (customer.getServices() != null && customer.getServices().size() > 0) {
-			mobilePlan = customer.getServices().get(0);
+		if (customer.getServices() != null) {
+			mobilePlan = customer.getServices();
 
 			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), mobilePlan.getServiceId());

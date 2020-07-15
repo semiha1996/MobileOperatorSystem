@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Table(name = "payings")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Payings {
 	@Id
 	@Column(name = "id")
@@ -32,10 +34,6 @@ public class Payings {
 	@JoinColumn(name = "customer_service_id")
 	private CustomerMobilePlan customerServiceRelations;
 
-	//@ManyToOne(cascade = CascadeType.ALL)
-	//@JoinColumn(name = "id")
-	//private CustomerMobilePlan customerServiceRelations;
-
 	public Payings() {
 	}
 
@@ -44,7 +42,6 @@ public class Payings {
 		super();
 		this.id = id;
 		this.dateOfPaying = dateOfPaying;
-		//this.customer_serviceId = customer_serviceId;
 		this.customerServiceRelations = customerServiceRelations;
 	}
 }

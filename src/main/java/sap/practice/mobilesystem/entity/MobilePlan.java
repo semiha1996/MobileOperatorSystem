@@ -10,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import sap.practice.mobilesystem.entity.MobilePlan;
@@ -19,6 +22,7 @@ import sap.practice.mobilesystem.entity.MobilePlan;
 @Table(name = "mobile_service")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class MobilePlan {
 	@Id
 	@Column(name = "id")
@@ -44,7 +48,7 @@ public class MobilePlan {
 	private Date periodOfActivation;
 
 	// for table customer_service
-	@ManyToMany(mappedBy = "services", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "services", cascade = CascadeType.ALL)
 	private List<Customer> customers;
 
 	public MobilePlan() {

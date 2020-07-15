@@ -74,7 +74,7 @@
 		</div>
 		<div>
 			<label class="label_menu">Service: </label> <select
-				th:field="*{services[0].serviceId}" class="dropdown"
+				th:field="*{services.serviceId}" class="dropdown"
 				style="float: left; margin-right: 10px">
 				<option th:each="service : ${services}"
 					th:value="${service.serviceId}" th:text="${service.name}">
