@@ -3,12 +3,14 @@ package sap.practice.mobilesystem.controller;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sap.practice.mobilesystem.entity.Customer;
 import sap.practice.mobilesystem.entity.CustomerMobilePlan;
 import sap.practice.mobilesystem.entity.MobilePlan;
+import sap.practice.mobilesystem.entity.Usage;
 import sap.practice.mobilesystem.service.AdministratorService;
 import sap.practice.mobilesystem.service.CustomerMobilePlanService;
 import sap.practice.mobilesystem.service.CustomerService;
 import sap.practice.mobilesystem.service.MobilePlanService;
 import sap.practice.mobilesystem.service.PayingsService;
-import sap.practice.mobilesystem.utilities.PlanId;
+import sap.practice.mobilesystem.service.UsageService;
+import sap.practice.mobilesystem.utilities.CustomerPlanId;
 import sap.practice.mobilesystem.utilities.SearchTerm;
 import sap.practice.mobilesystem.utilities.User;
 
@@ -44,6 +48,9 @@ public class MobileOperatorController {
 
 	@Autowired
 	private PayingsService payingsService;
+
+	@Autowired
+	private UsageService usageService;
 
 	// menu page
 	// service(s) <==> mobilePlan(s)
@@ -84,8 +91,7 @@ public class MobileOperatorController {
 	// add new customer and choose a service to assign to him
 	@PostMapping(value = "/addCustomer")
 	public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
-		List<MobilePlan> mobilePlans = mobilePlanService
-				.getMobilePlansById(customer.getServices().get(0).getServiceId());
+		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(customer.getServices().get(0).getServiceId());
 
 		customer.getServices().clear();
 		Long mobileServiceId = 0L;
@@ -94,13 +100,14 @@ public class MobileOperatorController {
 			mobileServiceId = mobilePlans.get(0).getServiceId();
 
 			Long customerId = userService.saveCustomer(customer);
-			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
-					.getAllCustomerMobilePlansById(customerId, mobileServiceId);
-
+			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService.getAllCustomerMobilePlansById(customerId, mobileServiceId);
+			
+			List<Usage> customerUsage = usageService.getAllUsage();
+			
 			if (customerServiceEntities.size() > 0) {
 				CustomerMobilePlan customerServiceEnt = customerServiceEntities.get(0);
 				LocalDateTime date = LocalDateTime.now();
-				Long day = (long) date.getDayOfMonth();
+				Date day = (long) date.getDayOfMonth();
 				customerServiceEnt.setDateToBePayed(day);
 				customerServiceEnt.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
 				customerServiceEnt.setSmsLeft(mobilePlans.get(0).getSmsNumber());
@@ -131,12 +138,10 @@ public class MobileOperatorController {
 		if (customers.size() > 0) {
 			customer = customers.get(0);
 		}
-		PlanId currentPlanId = new PlanId();
+		CustomerPlanId currentPlanId = new CustomerPlanId();
 		currentPlanId.setPlanId(customer.getServices().get(0).getServiceId());
 		model.addAttribute("customer", customer);
 		model.addAttribute("customerCurrentPlanId", currentPlanId);
-		
-		System.out.println(currentPlanId.getPlanId());
 
 		List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
 		model.addAttribute("services", mobilePlans);
@@ -145,34 +150,35 @@ public class MobileOperatorController {
 	}
 
 	@PostMapping(value = "/updateCustomer")
-	public String getUpdateCustomerPage(@ModelAttribute Customer customer, @ModelAttribute PlanId customerCurrentPlanId,
-			@RequestParam Long id, Model model) {
+	public String getUpdateCustomerPage(@ModelAttribute Customer customer,
+			@ModelAttribute CustomerPlanId customerCurrentPlanId, @RequestParam Long id, Model model) {
 		customer.setCustomerId(id);
 		Long newServiceId = customer.getServices().get(0).getServiceId();
 
 		CustomerMobilePlan customerMobilePlan = new CustomerMobilePlan();
 		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
 		if (mobilePlans.size() > 0) {
-			MobilePlan newMobilePlan = mobilePlans.get(0);
-			
+			;
+
 			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
+			
+			List<Usage> customerUsage = usageService.getAllUsage();
 
 			if (customerServiceEntities.size() > 0) {
 				customerMobilePlan = customerServiceEntities.get(0);
-				customerMobilePlan.setServiceId(newMobilePlan.getServiceId());
-				customerMobilePlan.setMegabytesLeft(newMobilePlan.getMegabytes());
-				customerMobilePlan.setSmsLeft(newMobilePlan.getSmsNumber());
-				customerMobilePlan.setMinutesLeft(newMobilePlan.getMinutes());
+				customerMobilePlan.setServiceId(mobilePlans.get(0).getServiceId());
+				customerMobilePlan.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
+				customerMobilePlan.setSmsLeft(mobilePlans.get(0).getSmsNumber());
+				customerMobilePlan.setMinutesLeft(mobilePlans.get(0).getMinutes());
 			}
-			
+
 			customer.getServices().clear();
-			customer.getServices().add(newMobilePlan);
+			customer.getServices().add(mobilePlans.get(0));
 		}
 
-		customerMobilePlanService.saveCustomerMobilePlanEntity(customerMobilePlan);
 		userService.updateCustomer(customer);
-		
+		customerMobilePlanService.saveCustomerMobilePlanEntity(customerMobilePlan);
 
 		model.addAttribute("statusText", "Customer updated successfully");
 		return "status";
@@ -211,7 +217,7 @@ public class MobileOperatorController {
 		}
 		model.addAttribute("service", mobilePlan);
 		model.addAttribute("customerPlan", customerPlan);
-		
+
 		return "customer_menu";
 	}
 

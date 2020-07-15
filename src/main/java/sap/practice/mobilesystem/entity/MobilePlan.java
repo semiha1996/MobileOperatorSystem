@@ -1,5 +1,6 @@
 package sap.practice.mobilesystem.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -39,8 +40,8 @@ public class MobilePlan {
 	@Column(name = "price")
 	private float price;
 
-	@Column(name = "period_activation")
-	private float periodOfActivation;
+	@Column(name = "period_active")
+	private Date periodOfActivation;
 
 	// for table customer_service
 	@ManyToMany(mappedBy = "services", cascade = CascadeType.ALL)
@@ -50,7 +51,7 @@ public class MobilePlan {
 	}
 
 	public MobilePlan(Long serviceId, String name, int megabytes, int smsNumber, int minutes, float price,
-			float periodOfActivation) {
+			Date periodOfActivation) {
 		super();
 		this.serviceId = serviceId;
 		this.name = name;

@@ -6,7 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class PlanId {
+public class CustomerPlanId {
 	private Long planId;
-	public PlanId() {}
+	private Long customerId;
+	public CustomerPlanId() {}
 }

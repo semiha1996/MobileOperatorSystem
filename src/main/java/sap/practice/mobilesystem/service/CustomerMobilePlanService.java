@@ -23,7 +23,7 @@ public class CustomerMobilePlanService {
 	}
 
 	public void saveCustomerMobilePlanEntity(CustomerMobilePlan entity) {
-		repository.saveAndFlush(entity);
+		repository.save(entity);
 	}
 
 }

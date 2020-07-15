@@ -1,5 +1,6 @@
 package sap.practice.mobilesystem.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -30,31 +31,14 @@ public class CustomerMobilePlan {
 	@Column(name = "service_id")
 	private Long serviceId;
 
-	@Column(name = "date_to_be_payed")
-	private Long dateToBePayed;
-
-	@Column(name = "megabytes_left")
-	private Integer megabytesLeft;
-
-	@Column(name = "sms_left")
-	private Integer smsLeft;
-
-	@Column(name = "minutes_left")
-	private Integer minutesLeft;
-
 	public CustomerMobilePlan() {
 	}
 
-	public CustomerMobilePlan(Long id, Long customerId, Long serviceId, Long dateToBePayed, int megabytesLeft,
-			int smsLeft, int minutesLeft) {
+	public CustomerMobilePlan(Long id, Long customerId, Long serviceId) {
 		super();
 		Id = id;
 		this.customerId = customerId;
 		this.serviceId = serviceId;
-		this.dateToBePayed = dateToBePayed;
-		this.megabytesLeft = megabytesLeft;
-		this.smsLeft = smsLeft;
-		this.minutesLeft = minutesLeft;
 	}
 
 	@OneToMany(mappedBy = "customerServiceRelations", cascade = CascadeType.ALL)
