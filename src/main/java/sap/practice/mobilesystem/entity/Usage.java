@@ -26,7 +26,7 @@ public class Usage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long usageId;
 
-	@Column(name = "date_to_be_payed")
+	@Column(name = "date_to_be_paid")
 	private Date dateToBePayed;
 
 	@Column(name = "megabytes_left")
@@ -38,28 +38,28 @@ public class Usage {
 	@Column(name = "minutes_left")
 	private Integer minutesLeft;
 
-	@Column(name = "customer_service_id")
-	private Long customer_serviceId;
+	//@Column(name = "customer_service_id")
+	//private Long customerServiceId;
 
 	public Usage() {
 		super();
 	}
 
 	public Usage(Long usageId, Date dateToBePayed, Integer megabytesLeft, Integer smsLeft, Integer minutesLeft,
-			Long customer_serviceId, CustomerMobilePlan customerMobilePlan) {
+			Long customerServiceId, CustomerMobilePlan customerMobilePlan) {
 		super();
 		this.usageId = usageId;
 		this.dateToBePayed = dateToBePayed;
 		this.megabytesLeft = megabytesLeft;
 		this.smsLeft = smsLeft;
 		this.minutesLeft = minutesLeft;
-		this.customer_serviceId = customer_serviceId;
-		this.customerMobilePlan = customerMobilePlan;
+		//this.customerServiceId = customerServiceId;
+		this.customerServiceId = customerMobilePlan;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "customer_service_id", referencedColumnName = "id")
-	private CustomerMobilePlan customerMobilePlan;
+	@OneToOne(cascade = CascadeType.ALL )
+	@JoinColumn(name = "customer_service_id", referencedColumnName = "id" )
+	private CustomerMobilePlan customerServiceId;
 	// private CustomerMobilePlan customerServiceRelations;
 
 }

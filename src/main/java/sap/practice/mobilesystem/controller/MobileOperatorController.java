@@ -10,12 +10,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import sap.practice.mobilesystem.entity.Customer;
@@ -30,7 +28,6 @@ import sap.practice.mobilesystem.service.PayingsService;
 import sap.practice.mobilesystem.service.UsageService;
 import sap.practice.mobilesystem.utilities.CustomerPlanId;
 import sap.practice.mobilesystem.utilities.SearchTerm;
-import sap.practice.mobilesystem.utilities.User;
 
 @Controller
 public class MobileOperatorController {
@@ -91,7 +88,8 @@ public class MobileOperatorController {
 	// add new customer and choose a service to assign to him
 	@PostMapping(value = "/addCustomer")
 	public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
-		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(customer.getServices().get(0).getServiceId());
+		List<MobilePlan> mobilePlans = mobilePlanService
+				.getMobilePlansById(customer.getServices().get(0).getServiceId());
 
 		customer.getServices().clear();
 		Long mobileServiceId = 0L;
@@ -100,25 +98,35 @@ public class MobileOperatorController {
 			mobileServiceId = mobilePlans.get(0).getServiceId();
 
 			Long customerId = userService.saveCustomer(customer);
-			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService.getAllCustomerMobilePlansById(customerId, mobileServiceId);
-			
-			List<Usage> customerUsage = usageService.getAllUsage();
-			
-			if (customerServiceEntities.size() > 0) {
-				CustomerMobilePlan customerServiceEnt = customerServiceEntities.get(0);
-				LocalDateTime date = LocalDateTime.now();
-				Date day = (long) date.getDayOfMonth();
-				customerServiceEnt.setDateToBePayed(day);
-				customerServiceEnt.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
-				customerServiceEnt.setSmsLeft(mobilePlans.get(0).getSmsNumber());
-				customerServiceEnt.setMinutesLeft(mobilePlans.get(0).getMinutes());
+			List<CustomerMobilePlan> customerPlanEntities = customerMobilePlanService
+					.getAllCustomerMobilePlansById(customerId, mobileServiceId);
+
+			List<Usage> customerUsageEntities = usageService.getAllUsage();
+			Usage customerUsageEntity = customerUsageEntities.get(0);
+
+			if (customerPlanEntities.size() > 0) {
+				CustomerMobilePlan customerPlanEnt = customerPlanEntities.get(0);
+
+				LocalDateTime dateTime = LocalDateTime.now();
+				System.out.println("Date 1:" + dateTime);
+				Date dateToPay = convertToDateViaSqlTimestamp(dateTime);
+				System.out.println("Date 2" + dateToPay);
+
+				customerUsageEntity.setDateToBePayed(dateToPay);
+				customerUsageEntity.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
+				customerUsageEntity.setSmsLeft(mobilePlans.get(0).getSmsNumber());
+				customerUsageEntity.setMinutesLeft(mobilePlans.get(0).getMinutes());
 
 				// save customer in DB
-				customerMobilePlanService.saveCustomerMobilePlanEntity(customerServiceEnt);
+				customerMobilePlanService.saveCustomerMobilePlanEntity(customerPlanEnt);
 			}
 		}
 		model.addAttribute("statusText", "User added successfully");
 		return "status";
+	}
+
+	public Date convertToDateViaSqlTimestamp(LocalDateTime dateToConvert) {
+		return java.sql.Timestamp.valueOf(dateToConvert);
 	}
 
 	// add a new service and save it in DB
@@ -158,27 +166,15 @@ public class MobileOperatorController {
 		CustomerMobilePlan customerMobilePlan = new CustomerMobilePlan();
 		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
 		if (mobilePlans.size() > 0) {
-			;
 
 			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
-			
-			List<Usage> customerUsage = usageService.getAllUsage();
-
-			if (customerServiceEntities.size() > 0) {
-				customerMobilePlan = customerServiceEntities.get(0);
-				customerMobilePlan.setServiceId(mobilePlans.get(0).getServiceId());
-				customerMobilePlan.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
-				customerMobilePlan.setSmsLeft(mobilePlans.get(0).getSmsNumber());
-				customerMobilePlan.setMinutesLeft(mobilePlans.get(0).getMinutes());
-			}
 
 			customer.getServices().clear();
 			customer.getServices().add(mobilePlans.get(0));
 		}
 
 		userService.updateCustomer(customer);
-		customerMobilePlanService.saveCustomerMobilePlanEntity(customerMobilePlan);
 
 		model.addAttribute("statusText", "Customer updated successfully");
 		return "status";
@@ -225,15 +221,13 @@ public class MobileOperatorController {
 	public String getHomePage(Model model) {
 		return "index";
 	}
-
-	@PostMapping(value = "/login")
-	public String getLogin(@ModelAttribute User user, Model model) {
-		model.addAttribute("username", new String());
-		model.addAttribute("password", new String());
-
-		return "/login";
-	}
 	/*
+	 * @PostMapping(value = "/login") public String getLogin(@ModelAttribute User
+	 * user, Model model) { model.addAttribute("username", new String());
+	 * model.addAttribute("password", new String());
+	 * 
+	 * return "/login"; }
+	 * 
 	 * protected void configure(final HttpSecurity http) throws Exception { http
 	 * .formLogin() .loginPage("/login.html") .failureUrl("/login-error.html")
 	 * .and() .logout() .logoutSuccessUrl("/index.html"); }
