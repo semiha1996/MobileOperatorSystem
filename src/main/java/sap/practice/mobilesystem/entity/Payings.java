@@ -28,12 +28,13 @@ public class Payings {
 	@Column(name = "date_of_paying")
 	private Date dateOfPaying;
 
-	@Column(name = "customer_service_id")
-	private Long customer_serviceId;
-
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "payings")
+	@JoinColumn(name = "customer_service_id")
 	private CustomerMobilePlan customerServiceRelations;
+
+	//@ManyToOne(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "id")
+	//private CustomerMobilePlan customerServiceRelations;
 
 	public Payings() {
 	}
@@ -43,7 +44,7 @@ public class Payings {
 		super();
 		this.id = id;
 		this.dateOfPaying = dateOfPaying;
-		this.customer_serviceId = customer_serviceId;
+		//this.customer_serviceId = customer_serviceId;
 		this.customerServiceRelations = customerServiceRelations;
 	}
 }

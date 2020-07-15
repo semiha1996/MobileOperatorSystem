@@ -29,5 +29,9 @@ public class UsageService {
 		List<Usage> customerUsage = repository.findAllUsageById(id);
 		return customerUsage;
 	}
+	
+	public void saveUsage(Usage usage) {
+		repository.saveAndFlush(usage);
+	}
 
 }

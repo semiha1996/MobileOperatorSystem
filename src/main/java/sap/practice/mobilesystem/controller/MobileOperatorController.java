@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sap.practice.mobilesystem.entity.Customer;
 import sap.practice.mobilesystem.entity.CustomerMobilePlan;
 import sap.practice.mobilesystem.entity.MobilePlan;
+import sap.practice.mobilesystem.entity.Payings;
 import sap.practice.mobilesystem.entity.Usage;
 import sap.practice.mobilesystem.service.AdministratorService;
 import sap.practice.mobilesystem.service.CustomerMobilePlanService;
@@ -101,24 +102,25 @@ public class MobileOperatorController {
 			List<CustomerMobilePlan> customerPlanEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customerId, mobileServiceId);
 
-			List<Usage> customerUsageEntities = usageService.getAllUsage();
-			Usage customerUsageEntity = customerUsageEntities.get(0);
-
 			if (customerPlanEntities.size() > 0) {
 				CustomerMobilePlan customerPlanEnt = customerPlanEntities.get(0);
-
+				Usage customerUsageEntity = new Usage();
 				LocalDateTime dateTime = LocalDateTime.now();
-				System.out.println("Date 1:" + dateTime);
 				Date dateToPay = convertToDateViaSqlTimestamp(dateTime);
-				System.out.println("Date 2" + dateToPay);
-
+				customerUsageEntity.setCustomerServiceId(customerPlanEnt);
 				customerUsageEntity.setDateToBePayed(dateToPay);
 				customerUsageEntity.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
 				customerUsageEntity.setSmsLeft(mobilePlans.get(0).getSmsNumber());
 				customerUsageEntity.setMinutesLeft(mobilePlans.get(0).getMinutes());
+				usageService.saveUsage(customerUsageEntity);
 
-				// save customer in DB
-				customerMobilePlanService.saveCustomerMobilePlanEntity(customerPlanEnt);
+				Payings customerNewPaying = new Payings();
+				dateTime = dateTime.plusMonths(1);
+				dateToPay = convertToDateViaSqlTimestamp(dateTime);
+				customerNewPaying.setDateOfPaying(dateToPay);
+				customerNewPaying.setCustomerServiceRelations(customerPlanEnt);
+				payingsService.savePayings(customerNewPaying);
+				
 			}
 		}
 		model.addAttribute("statusText", "User added successfully");
