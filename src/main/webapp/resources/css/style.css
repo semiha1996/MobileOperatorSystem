@@ -76,7 +76,7 @@ form {
 
 .dropdown {
 	display: block;
-	width: 150px;
+	width: 300px;
 	height: 30px;
 	background: #4E9CAF;
 	text-align: right;
@@ -85,6 +85,11 @@ form {
 	font-weight: bold;
 	margin-bottom: 20px;
 	text-decoration: none;
+}
+
+.dropdown_float {
+	float:left;
+	margin-right: 10px;
 }
 
 .text_field {

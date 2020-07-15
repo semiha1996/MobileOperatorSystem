@@ -61,7 +61,7 @@ public class MobileOperatorController {
 
 		Customer customer = new Customer();
 		customer.setServices(new MobilePlan());
-		
+
 		model.addAttribute("customer", customer);
 
 		model.addAttribute("serviceName", new String());
@@ -89,8 +89,7 @@ public class MobileOperatorController {
 	// add new customer and choose a service to assign to him
 	@PostMapping(value = "/addCustomer")
 	public String getAddCustomerPage(@ModelAttribute Customer customer, Model model) {
-		List<MobilePlan> mobilePlans = mobilePlanService
-				.getMobilePlansById(customer.getServices().getServiceId());
+		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(customer.getServices().getServiceId());
 
 		Long mobileServiceId = 0L;
 		if (mobilePlans.size() > 0) {
@@ -119,7 +118,7 @@ public class MobileOperatorController {
 				customerNewPaying.setDateOfPaying(dateToPay);
 				customerNewPaying.setCustomerServiceRelations(customerPlanEnt);
 				payingsService.savePayings(customerNewPaying);
-				
+
 			}
 		}
 		model.addAttribute("statusText", "User added successfully");
@@ -170,7 +169,7 @@ public class MobileOperatorController {
 
 			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
-			
+
 			System.out.println(customerServiceEntities.get(0).getId());
 
 			customer.setServices(mobilePlans.get(0));
@@ -212,15 +211,24 @@ public class MobileOperatorController {
 			if (customerServiceEntities.size() > 0) {
 				Long customerPlanId = customerServiceEntities.get(0).getId();
 				List<Usage> usages = usageService.getUsageById(customerPlanId);
-				if(usages.size() > 0) {
+				if (usages.size() > 0) {
 					usage = usages.get(0);
 				}
 			}
 		}
 		model.addAttribute("service", mobilePlan);
 		model.addAttribute("usage", usage);
+		model.addAttribute("customer", customer);
+		
 
 		return "customer_menu";
+	}
+	
+	@PostMapping(value = "/updateCustomerData")
+	public String getUpdateSelfCustomerPage(@ModelAttribute Customer customer, Model model) {
+		userService.saveCustomer(customer);
+		model.addAttribute("statusText", "Customer updated successfully");
+		return "status";
 	}
 
 	@GetMapping(value = "/index")

@@ -49,10 +49,10 @@
 				placeholder="Enter customer e-mail" />
 		</div>
 
-		<div>
+		<div class="inputs_div">
 		<input type="hidden" th:field="${customerCurrentPlanId.planId}" />
 			<label class="label" style="float: left; margin-right: 10px">Service:</label>
-			<select th:field="*{services.serviceId}" class="dropdown"
+			<select th:field="*{services.serviceId}" class="dropdown dropdown_float"
 				style="float: left; margin-right: 10px">
 				<option th:each="service : ${services}"
 					th:value="${service.serviceId}" th:text="${service.name}"
