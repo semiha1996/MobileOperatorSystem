@@ -12,6 +12,6 @@ import sap.practice.mobilesystem.entity.Usage;
 
 @Repository
 public interface UsageRepository extends JpaRepository<Usage, Long> {
-	@Query("SELECT a FROM Usage a WHERE a.customerServiceId = :id")
+	@Query("SELECT a FROM Usage a WHERE a.customerServiceId.id = :id")
 	List<Usage> findAllUsageById(@Param("id")Long id);
 }

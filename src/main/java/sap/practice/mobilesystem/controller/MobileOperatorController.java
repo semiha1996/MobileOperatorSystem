@@ -194,7 +194,7 @@ public class MobileOperatorController {
 	@GetMapping(value = "/customer_menu")
 	public String getCustomerMenuPage(Model model) {
 
-		List<Customer> customers = userService.getCustomersById(2L);
+		List<Customer> customers = userService.getCustomersById(1L);
 		Customer customer = new Customer();
 		if (customers.size() > 0) {
 			customer = customers.get(0);
@@ -202,7 +202,7 @@ public class MobileOperatorController {
 		model.addAttribute("customer", customer);
 
 		MobilePlan mobilePlan = new MobilePlan();
-		CustomerMobilePlan customerPlan = new CustomerMobilePlan();
+		Usage usage = new Usage();
 		if (customer.getServices() != null) {
 			mobilePlan = customer.getServices();
 
@@ -210,11 +210,15 @@ public class MobileOperatorController {
 					.getAllCustomerMobilePlansById(customer.getCustomerId(), mobilePlan.getServiceId());
 
 			if (customerServiceEntities.size() > 0) {
-				customerPlan = customerServiceEntities.get(0);
+				Long customerPlanId = customerServiceEntities.get(0).getId();
+				List<Usage> usages = usageService.getUsageById(customerPlanId);
+				if(usages.size() > 0) {
+					usage = usages.get(0);
+				}
 			}
 		}
 		model.addAttribute("service", mobilePlan);
-		model.addAttribute("customerPlan", customerPlan);
+		model.addAttribute("usage", usage);
 
 		return "customer_menu";
 	}

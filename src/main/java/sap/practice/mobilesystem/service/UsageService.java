@@ -25,11 +25,6 @@ public class UsageService {
 		return usage;
 	}
 	
-	public List<Usage> getAllCustomerUsageById(Long id) {
-		List<Usage> customerUsage = repository.findAllUsageById(id);
-		return customerUsage;
-	}
-	
 	public void saveUsage(Usage usage) {
 		repository.saveAndFlush(usage);
 	}

@@ -57,7 +57,21 @@ form {
 	margin-bottom: 20px;
 	text-decoration: none;
 	float:left;
-	margin-right: 10px"
+	margin-right: 10px;
+}
+
+.label_menu1{
+	float:left;
+	margin-right: 10px;
+}
+
+.label_customer_menu{
+	width:200px!important;
+}
+
+.label_value {
+	width:200px!important;
+	text-align: left!important;
 }
 
 .dropdown {
@@ -99,8 +113,13 @@ form {
 	text-decoration: none;
 }
 
+.button_float {
+	float:left;
+}
+
 .inputs_div {
 	height: 50px;
+	float:left;
 }
 
 .inquire_div {
