@@ -8,7 +8,7 @@
 <body>
 	<h1>Login page</h1>
 	<p th:if="${loginError}" class="error">Wrong user or password</p>
-	<form th:action="@{/login.html}" method="post">
+	<form th:action="@{/tryLogin}" th:object="${customer}" method="post">
 		<div class="inputs_div">
 			<label class="label" style="float: left; margin-right: 10px">User Name:</label> 
 				<input type="text" th:field="*{username}" class="text_field"

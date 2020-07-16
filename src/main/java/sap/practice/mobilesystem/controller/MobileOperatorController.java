@@ -9,6 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
@@ -51,20 +55,29 @@ public class MobileOperatorController {
 	// menu page
 	// service(s) <==> mobilePlan(s)
 	@GetMapping(value = "/menu")
-	public String getMenuPage(Model model) {
-		List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
-		model.addAttribute("services", mobilePlans);
+	public String getMenuPage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") != null && session.getAttribute("ID") != null) {
+			String role = (String) session.getAttribute("ROLE");
+			if (role.equals("operator")) {
+				List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
+				model.addAttribute("services", mobilePlans);
 
-		model.addAttribute("searchTerm", new SearchTerm());
+				model.addAttribute("searchTerm", new SearchTerm());
 
-		Customer customer = new Customer();
-		customer.setServices(new MobilePlan());
+				Customer customer = new Customer();
+				customer.setServices(new MobilePlan());
 
-		model.addAttribute("customer", customer);
+				model.addAttribute("customer", customer);
 
-		model.addAttribute("serviceName", new String());
-		model.addAttribute("service", new MobilePlan());
-		return "menu";
+				model.addAttribute("serviceName", new String());
+				model.addAttribute("service", new MobilePlan());
+				return "menu";
+			} else {
+				return "index";
+			}
+		} else {
+			return "index";
+		}
 	}
 
 	// search in category customers or services and return search page
@@ -103,8 +116,8 @@ public class MobileOperatorController {
 				CustomerMobilePlan customerPlanEnt = customerPlanEntities.get(0);
 				Usage customerUsageEntity = new Usage();
 				LocalDateTime dateTime = LocalDateTime.now();
-				dateTime = dateTime.plusMonths(1);
-				Date dateToPay = convertToDateViaSqlTimestamp(dateTime);
+
+				Date dateToPay = convertToDateViaSqlTimestamp(dateTime.plusMonths(1));
 				customerUsageEntity.setCustomerServiceId(customerPlanEnt);
 				customerUsageEntity.setDateToBePayed(dateToPay);
 				customerUsageEntity.setMegabytesLeft(mobilePlans.get(0).getMegabytes());
@@ -141,21 +154,30 @@ public class MobileOperatorController {
 	}
 
 	@GetMapping(value = "/customer")
-	public String getCustomerPage(@RequestParam Long id, String role, Model model) {
-		List<Customer> customers = userService.getCustomersById(id);
-		Customer customer = new Customer();
-		if (customers.size() > 0) {
-			customer = customers.get(0);
+	public String getCustomerPage(@RequestParam Long id, String role, Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") != null && session.getAttribute("ID") != null) {
+			String userRole = (String) session.getAttribute("ROLE");
+			if (userRole.equals("operator")) {
+				List<Customer> customers = userService.getCustomersById(id);
+				Customer customer = new Customer();
+				if (customers.size() > 0) {
+					customer = customers.get(0);
+				}
+				CustomerPlanId currentPlanId = new CustomerPlanId();
+				currentPlanId.setPlanId(customer.getServices().getServiceId());
+				model.addAttribute("customer", customer);
+				model.addAttribute("customerCurrentPlanId", currentPlanId);
+
+				List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
+				model.addAttribute("services", mobilePlans);
+
+				return "customer";
+			} else {
+				return "index";
+			}
+		} else {
+			return "index";
 		}
-		CustomerPlanId currentPlanId = new CustomerPlanId();
-		currentPlanId.setPlanId(customer.getServices().getServiceId());
-		model.addAttribute("customer", customer);
-		model.addAttribute("customerCurrentPlanId", currentPlanId);
-
-		List<MobilePlan> mobilePlans = mobilePlanService.getAllMobilePlans();
-		model.addAttribute("services", mobilePlans);
-
-		return "customer";
 	}
 
 	@PostMapping(value = "/updateCustomer")
@@ -181,46 +203,47 @@ public class MobileOperatorController {
 		return "status";
 	}
 
-	@GetMapping(value = "/allCustomers")
-	public String getAllCustomersPage(@RequestParam Optional<String> status, Model model) {
-		List<Customer> customers = userService.getAllCustomers();
-
-		model.addAttribute("customers", customers);
-		return "allCustomers";
-	}
-
 	// customerMenu page, get customer's current services and show their properties
 	@GetMapping(value = "/customerMenu")
-	public String getCustomerMenuPage(Model model) {
-
-		List<Customer> customers = userService.getCustomersById(47L);
-		Customer customer = new Customer();
-		if (customers.size() > 0) {
-			customer = customers.get(0);
-		}
-		model.addAttribute("customer", customer);
-
-		MobilePlan mobilePlan = new MobilePlan();
-		Usage usage = new Usage();
-		if (customer.getServices() != null) {
-			mobilePlan = customer.getServices();
-
-			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
-					.getAllCustomerMobilePlansById(customer.getCustomerId(), mobilePlan.getServiceId());
-
-			if (customerServiceEntities.size() > 0) {
-				Long customerPlanId = customerServiceEntities.get(0).getId();
-				List<Usage> usages = usageService.getUsageById(customerPlanId);
-				if (usages.size() > 0) {
-					usage = usages.get(0);
+	public String getCustomerMenuPage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") != null && session.getAttribute("ID") != null) {
+			String userRole = (String) session.getAttribute("ROLE");
+			if (userRole.equals("customer")) {
+				Long customerId = (Long) session.getAttribute("ID");
+				List<Customer> customers = userService.getCustomersById(customerId);
+				Customer customer = new Customer();
+				if (customers.size() > 0) {
+					customer = customers.get(0);
 				}
-			}
-		}
-		model.addAttribute("service", mobilePlan);
-		model.addAttribute("usage", usage);
-		model.addAttribute("customer", customer);
+				model.addAttribute("customer", customer);
 
-		return "customerMenu";
+				MobilePlan mobilePlan = new MobilePlan();
+				Usage usage = new Usage();
+				if (customer.getServices() != null) {
+					mobilePlan = customer.getServices();
+
+					List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
+							.getAllCustomerMobilePlansById(customer.getCustomerId(), mobilePlan.getServiceId());
+
+					if (customerServiceEntities.size() > 0) {
+						Long customerPlanId = customerServiceEntities.get(0).getId();
+						List<Usage> usages = usageService.getUsageById(customerPlanId);
+						if (usages.size() > 0) {
+							usage = usages.get(0);
+						}
+					}
+				}
+				model.addAttribute("service", mobilePlan);
+				model.addAttribute("usage", usage);
+				model.addAttribute("customer", customer);
+
+				return "customerMenu";
+			} else {
+				return "index";
+			}
+		} else {
+			return "index";
+		}
 	}
 
 	@PostMapping(value = "/updateCustomerData")
@@ -231,18 +254,17 @@ public class MobileOperatorController {
 	}
 
 	@GetMapping(value = "/inquire")
-	public String getInquirePage(Model model) {
-		Date today = convertToDateViaSqlTimestamp(LocalDateTime.now());
+	public String getInquirePage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") != null && session.getAttribute("ID") != null) {
+			String userRole = (String) session.getAttribute("ROLE");
+			if (userRole.equals("operator")) {
+				Date today = convertToDateViaSqlTimestamp(LocalDateTime.now());
 
-		List<Usage> allUsages = usageService.getAllUsage();
-		List<Payings> allPayings = payingsService.getAllPayings();
-		List<Customer> duePayCustomers = new ArrayList<Customer>();
+				List<Usage> allUsages = usageService.getAllUsage();
+				List<Customer> duePayCustomers = new ArrayList<Customer>();
 
-		for (Usage usage : allUsages) {
-			if (usage.getDateToBePayed().before(today)) {
-				for (Payings payings : allPayings) {
-					if (payings.getDateOfPaying() == null || payings.getDateOfPaying().before(today)) {
-
+				for (Usage usage : allUsages) {
+					if (usage.getDateToBePayed().before(today)) {
 						Long customerId = usage.getCustomerServiceId().getCustomerId();
 						List<Customer> customers = userService.getCustomersById(customerId);
 						if (customers.size() > 0) {
@@ -250,44 +272,66 @@ public class MobileOperatorController {
 						}
 					}
 				}
+				SearchTerm searchTerm = new SearchTerm();
+				searchTerm.setSearchCategory("Inquire");
+				model.addAttribute("searchTerm", searchTerm);
+				model.addAttribute("customers", duePayCustomers);
+				return "search";
+			} else {
+				return "index";
 			}
+		} else {
+			return "index";
 		}
-		SearchTerm searchTerm = new SearchTerm();
-		searchTerm.setSearchCategory("Inquire");
-		model.addAttribute("searchTerm", searchTerm);
-		model.addAttribute("customers", duePayCustomers);
-		return "search";
 	}
 
+	@GetMapping(value = "/login") 
+	public String getloginPage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") == null && session.getAttribute("ID") == null) {
+			model.addAttribute("customer", new Customer()); 
+			return "login"; 
+		}
+		else {
+			return "redirect:/index";
+		}
+	}
+	
+	@PostMapping(value = "/tryLogin")
+	public String tryLogin(@ModelAttribute Customer customer, HttpServletRequest request) {
+		List<Customer> customers = 
+				userService.getCustomersByUserNamePassword(customer.getUsername(), customer.getPassword());
+		if(customers.size() > 0) {
+			Customer foundCustomer = customers.get(0);
+			request.getSession().setAttribute("ID", foundCustomer.getCustomerId());
+			request.getSession().setAttribute("ROLE", foundCustomer.getRole());
+			if(foundCustomer.getRole().equals("operator")) {
+				return "redirect:/menu";
+			}
+			else if(foundCustomer.getRole().equals("customer")) {
+				return "redirect:/customerMenu";
+			}
+			else {
+				return "redirect:/index";
+			}
+		}
+		return "redirect:/index";
+	}
+	
+	@PostMapping(value = "/tryLogout")
+	public String tryLogout(HttpServletRequest request) {
+		request.getSession().invalidate();
+		System.out.println("Session Over");
+		return "redirect:/index";
+	}
+	
 	@GetMapping(value = "/index")
-	public String getHomePage(Model model) {
+	public String getHomePage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") == null && session.getAttribute("ID") == null) {
+			model.addAttribute("isLogged", false); 
+		}
+		else {
+			model.addAttribute("isLogged", true); 
+		}
 		return "index";
 	}
-	/*
-	 * @PostMapping(value = "/login") public String getLogin(@ModelAttribute User
-	 * user, Model model) { model.addAttribute("username", new String());
-	 * model.addAttribute("password", new String());
-	 * 
-	 * return "/login"; }
-	 * 
-	 * protected void configure(final HttpSecurity http) throws Exception { http
-	 * .formLogin() .loginPage("/login.html") .failureUrl("/login-error.html")
-	 * .and() .logout() .logoutSuccessUrl("/index.html"); }
-	 * 
-	 * // Login form
-	 * 
-	 * @GetMapping(value = "/login") public String LoginPage(Model model) {
-	 * model.addAttribute("course", new Customer()); return "login"; }
-	 * 
-	 * @PostMapping(value = "/login") public String login(@ModelAttribute username,
-	 * String password, Model model) { model.addAttribute(username, password);
-	 * return "/login"; }
-	 * 
-	 * @RequestMapping("/login.html") public String login() { return "login.html"; }
-	 * 
-	 * // Login form with error
-	 * 
-	 * @PostMapping(value = "/error") public String loginError(Model model) {
-	 * model.addAttribute("loginError", true); return "login"; }
-	 */
 }

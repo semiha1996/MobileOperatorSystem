@@ -32,6 +32,11 @@ public class CustomerService {
 		List<Customer> customers = repository.findAllCustomersById(id, "customer");
 		return customers;
 	}
+	
+	public List<Customer> getCustomersByUserNamePassword(String userName, String password) {
+		List<Customer> customers = repository.findAllCustomersByUserNamePassword(userName, password);
+		return customers;
+	}
 
 	public Long saveCustomer(Customer customer) {
 		Customer savedCustomer = repository.saveAndFlush(customer);

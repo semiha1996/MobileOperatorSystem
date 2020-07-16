@@ -75,5 +75,11 @@
 			<td th:text="${customer.email}">Email</td>
 		</tr>
 	</table>
+	
+	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
+		style="width: 100%; float: left;">
+		<div class="exit_div">
+			<input type="submit" class="button button_float" value="Log out" />
+		</div>
 </body>
 </html>

@@ -66,21 +66,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        		 <!--	<dependency>
-      spring security  
-	<groupId>org.springframework.security</groupId>
-	<artifactId>spring-security-web</artifactId>
-	</dependency>
-  <dependency>
-	<groupId>org.springframework.security</groupId>
-	<artifactId>spring-security-config</artifactId>
-	</dependency>
-  <dependency>
-	<groupId>org.thymeleaf.extras</groupId>
-	<artifactId>thymeleaf-extras-springsecurity4</artifactId>	
-	<version>2.1.2.RELEASE</version>
-  </dependency>
-  -->
+        <dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+		</dependency>
     </dependencies>
 		
     <build>

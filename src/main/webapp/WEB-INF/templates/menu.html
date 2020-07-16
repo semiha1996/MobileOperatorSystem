@@ -143,11 +143,10 @@
 	<hr id="menu_separator"
 		style="float: left; width: 110%; margin-top: 0.31%" />
 
-	<form th:action="@{/exit}" th:object="${service}" method="post"
+	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
 		style="width: 100%; float: left;">
 		<div class="exit_div">
-			<a th:href="@{|/index|}" class="button">Log out</a>
+			<input type="submit" class="button button_float" value="Log out" />
 		</div>
-	</form>
 </body>
 </html>

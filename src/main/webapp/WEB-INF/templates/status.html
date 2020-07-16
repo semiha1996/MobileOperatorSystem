@@ -12,5 +12,11 @@
 <body>
 	<h1 th:text="${statusText}"></h1>
 	<a th:href="@{|/menu|}" class="button">Back</a>
+	
+	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
+		style="width: 100%; float: left;">
+		<div class="exit_div">
+			<input type="submit" class="button button_float" value="Log out" />
+		</div>
 </body>
 </html>

@@ -63,5 +63,11 @@
 		</div>
 		<input type="submit" class="button" value="Update" />
 	</form>
+	
+	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
+		style="width: 100%; float: left;">
+		<div class="exit_div">
+			<input type="submit" class="button button_float_customer" value="Log out" />
+		</div>
 </body>
 </html>

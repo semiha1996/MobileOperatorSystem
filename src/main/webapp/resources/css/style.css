@@ -121,6 +121,10 @@ form {
 .button_float {
 	float:left;
 }
+.button_float_customer {
+	float:left;
+	margin-left: 420px;
+}
 
 .inputs_div {
 	height: 50px;
