@@ -56,24 +56,5 @@
 			<td th:text="${service.periodOfActivation}">Period Activation</td>
 		</tr>
 	</table>
-	
-	<table th:if="${searchTerm.searchCategory == 'Inquire'}">
-		<tr>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Address</th>
-			<th>Phone</th>		
-			<th>Email</th>
-		</tr>
-
-		<tr th:each="customer : ${customers}">
-			<td th:text="${customer.customerId}">Id</td>
-			<td><a th:text="${customer.name}"
-				th:href="@{|/customer?id=${customer.customerId}|}"></a></td>
-			<td th:text="${customer.address}">Address</td>
-			<td th:text="${customer.phone}">Phone</td>
-			<td th:text="${customer.email}">Email</td>
-		</tr>
-	</table>
 </body>
 </html>

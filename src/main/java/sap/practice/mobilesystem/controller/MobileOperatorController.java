@@ -1,5 +1,7 @@
 package sap.practice.mobilesystem.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -163,7 +165,6 @@ public class MobileOperatorController {
 		customer.setCustomerId(id);
 		Long newServiceId = customer.getServices().getServiceId();
 
-		CustomerMobilePlan customerMobilePlan = new CustomerMobilePlan();
 		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
 		if (mobilePlans.size() > 0) {
 
@@ -229,6 +230,26 @@ public class MobileOperatorController {
 		userService.saveCustomer(customer);
 		model.addAttribute("statusText", "Customer updated successfully");
 		return "status";
+	}
+	
+	@GetMapping(value = "/inquire")
+	public String getInquirePage(Model model) {
+		List<Usage> allUsages = usageService.getAllUsage();
+		List<Customer> duePayCustomers = new ArrayList<Customer>();
+		for (Usage usage : allUsages) {
+			if(usage.getDateToBePayed().before(convertToDateViaSqlTimestamp(LocalDateTime.now()))) {
+				Long customerId = usage.getCustomerServiceId().getCustomerId();
+				List<Customer> customers = userService.getCustomersById(customerId);
+				if(customers.size() > 0) {
+					duePayCustomers.add(customers.get(0));
+				}
+			}
+		}
+		SearchTerm searchTerm = new SearchTerm();
+		searchTerm.setSearchCategory("Inquire");
+		model.addAttribute("searchTerm", searchTerm);
+		model.addAttribute("customers", duePayCustomers);
+		return "search";
 	}
 
 	@GetMapping(value = "/index")
