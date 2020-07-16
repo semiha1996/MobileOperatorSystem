@@ -14,6 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	@Query("SELECT a FROM Customer a WHERE lower(a.name) LIKE %:searchTerm% OR a.phone LIKE %:searchTerm%")
 	List<Customer> findAllByNameOrPhone(@Param("searchTerm") String searchTerm);
 
-	@Query("SELECT a FROM Customer a WHERE a.customerId = :id")
-	List<Customer> findAllById(@Param("id") Long id);
+	@Query("SELECT a FROM Customer a WHERE a.customerId = :id AND a.role= :role")
+	List<Customer> findAllCustomersById(@Param("id") Long id, @Param("role") String role);
 }

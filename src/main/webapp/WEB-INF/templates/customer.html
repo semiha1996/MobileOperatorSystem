@@ -11,6 +11,8 @@
 <body>
 	<form th:action="@{|/updateCustomer?id=${customer.customerId}|}"
 		th:object="${customer}" method="post" style="width: 48%; float: left">
+		<input type="hidden" th:field="*{password}" />
+		<input type="hidden" th:field="*{role}" />
 		<div class="inputs_div">
 			<label class="label" style="float: left; margin-right: 10px">Name:</label>
 			<input type="text" th:field="*{name}" class="text_field"
@@ -39,8 +41,7 @@
 			<label class="label" style="float: left; margin-right: 10px">User
 				Name:</label> <input type="text" th:field="*{username}" class="text_field"
 				style="float: left; margin-right: 10px"
-				placeholder="Enter customer user name" /> <input type="hidden"
-				th:field="*{password}" />
+				placeholder="Enter customer user name" /> 
 		</div>
 		<div class="inputs_div">
 			<label class="label" style="float: left; margin-right: 10px">E-mail:</label>

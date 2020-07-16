@@ -3,7 +3,7 @@ package sap.practice.mobilesystem.controller;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +23,6 @@ import sap.practice.mobilesystem.entity.CustomerMobilePlan;
 import sap.practice.mobilesystem.entity.MobilePlan;
 import sap.practice.mobilesystem.entity.Payings;
 import sap.practice.mobilesystem.entity.Usage;
-import sap.practice.mobilesystem.service.AdministratorService;
 import sap.practice.mobilesystem.service.CustomerMobilePlanService;
 import sap.practice.mobilesystem.service.CustomerService;
 import sap.practice.mobilesystem.service.MobilePlanService;
@@ -34,9 +33,6 @@ import sap.practice.mobilesystem.utilities.SearchTerm;
 
 @Controller
 public class MobileOperatorController {
-	@Autowired
-	private AdministratorService adminService;
-
 	@Autowired
 	private CustomerService userService;
 
@@ -96,6 +92,7 @@ public class MobileOperatorController {
 		Long mobileServiceId = 0L;
 		if (mobilePlans.size() > 0) {
 			customer.setServices(mobilePlans.get(0));
+			customer.setRole("customer");
 			mobileServiceId = mobilePlans.get(0).getServiceId();
 
 			Long customerId = userService.saveCustomer(customer);
@@ -106,6 +103,7 @@ public class MobileOperatorController {
 				CustomerMobilePlan customerPlanEnt = customerPlanEntities.get(0);
 				Usage customerUsageEntity = new Usage();
 				LocalDateTime dateTime = LocalDateTime.now();
+				dateTime = dateTime.plusMonths(1);
 				Date dateToPay = convertToDateViaSqlTimestamp(dateTime);
 				customerUsageEntity.setCustomerServiceId(customerPlanEnt);
 				customerUsageEntity.setDateToBePayed(dateToPay);
@@ -115,9 +113,10 @@ public class MobileOperatorController {
 				usageService.saveUsage(customerUsageEntity);
 
 				Payings customerNewPaying = new Payings();
-				dateTime = dateTime.plusMonths(1);
-				dateToPay = convertToDateViaSqlTimestamp(dateTime);
-				customerNewPaying.setDateOfPaying(dateToPay);
+				Date dateOfPaying = new Date();
+
+				dateOfPaying = convertToDateViaSqlTimestamp(dateTime);
+				customerNewPaying.setDateOfPaying(dateOfPaying);
 				customerNewPaying.setCustomerServiceRelations(customerPlanEnt);
 				payingsService.savePayings(customerNewPaying);
 
@@ -142,7 +141,7 @@ public class MobileOperatorController {
 	}
 
 	@GetMapping(value = "/customer")
-	public String getCustomerPage(@RequestParam Long id, Model model) {
+	public String getCustomerPage(@RequestParam Long id, String role, Model model) {
 		List<Customer> customers = userService.getCustomersById(id);
 		Customer customer = new Customer();
 		if (customers.size() > 0) {
@@ -182,19 +181,19 @@ public class MobileOperatorController {
 		return "status";
 	}
 
-	@GetMapping(value = "/all_customers")
+	@GetMapping(value = "/allCustomers")
 	public String getAllCustomersPage(@RequestParam Optional<String> status, Model model) {
 		List<Customer> customers = userService.getAllCustomers();
 
 		model.addAttribute("customers", customers);
-		return "all_courses";
+		return "allCustomers";
 	}
 
 	// customerMenu page, get customer's current services and show their properties
-	@GetMapping(value = "/customer_menu")
+	@GetMapping(value = "/customerMenu")
 	public String getCustomerMenuPage(Model model) {
 
-		List<Customer> customers = userService.getCustomersById(1L);
+		List<Customer> customers = userService.getCustomersById(47L);
 		Customer customer = new Customer();
 		if (customers.size() > 0) {
 			customer = customers.get(0);
@@ -220,28 +219,36 @@ public class MobileOperatorController {
 		model.addAttribute("service", mobilePlan);
 		model.addAttribute("usage", usage);
 		model.addAttribute("customer", customer);
-		
 
-		return "customer_menu";
+		return "customerMenu";
 	}
-	
+
 	@PostMapping(value = "/updateCustomerData")
 	public String getUpdateSelfCustomerPage(@ModelAttribute Customer customer, Model model) {
 		userService.saveCustomer(customer);
 		model.addAttribute("statusText", "Customer updated successfully");
 		return "status";
 	}
-	
+
 	@GetMapping(value = "/inquire")
 	public String getInquirePage(Model model) {
+		Date today = convertToDateViaSqlTimestamp(LocalDateTime.now());
+
 		List<Usage> allUsages = usageService.getAllUsage();
+		List<Payings> allPayings = payingsService.getAllPayings();
 		List<Customer> duePayCustomers = new ArrayList<Customer>();
+
 		for (Usage usage : allUsages) {
-			if(usage.getDateToBePayed().before(convertToDateViaSqlTimestamp(LocalDateTime.now()))) {
-				Long customerId = usage.getCustomerServiceId().getCustomerId();
-				List<Customer> customers = userService.getCustomersById(customerId);
-				if(customers.size() > 0) {
-					duePayCustomers.add(customers.get(0));
+			if (usage.getDateToBePayed().before(today)) {
+				for (Payings payings : allPayings) {
+					if (payings.getDateOfPaying() == null || payings.getDateOfPaying().before(today)) {
+
+						Long customerId = usage.getCustomerServiceId().getCustomerId();
+						List<Customer> customers = userService.getCustomersById(customerId);
+						if (customers.size() > 0) {
+							duePayCustomers.add(customers.get(0));
+						}
+					}
 				}
 			}
 		}

@@ -29,7 +29,7 @@ public class CustomerService {
 	}
 
 	public List<Customer> getCustomersById(Long id) {
-		List<Customer> customers = repository.findAllById(id);
+		List<Customer> customers = repository.findAllCustomersById(id, "customer");
 		return customers;
 	}
 

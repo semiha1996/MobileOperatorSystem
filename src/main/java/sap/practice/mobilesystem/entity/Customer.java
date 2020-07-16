@@ -50,10 +50,9 @@ public class Customer {
 
 	@Column(name = "email")
 	private String email;
-
-	// for table admin_customer
-	@ManyToMany(mappedBy = "customers", cascade = CascadeType.ALL)
-	private List<Administrator> admins;
+	
+	@Column(name = "customer_role")
+	private String role;
 
 	// for table customer_service
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -65,7 +64,7 @@ public class Customer {
 	}
 
 	public Customer(Long userId, String name, String phone, String iban, String address, String username,
-			String password, String email, List<Administrator> admins, MobilePlan services) {
+			String password, String email, String role) {
 		super();
 
 	}
