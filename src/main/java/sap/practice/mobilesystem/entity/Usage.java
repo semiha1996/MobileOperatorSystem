@@ -1,8 +1,6 @@
 package sap.practice.mobilesystem.entity;
 
 import java.util.Date;
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,9 +38,6 @@ public class Usage {
 	@Column(name = "minutes_left")
 	private Integer minutesLeft;
 
-	//@Column(name = "customer_service_id")
-	//private Long customerServiceId;
-
 	public Usage() {
 		super();
 	}
@@ -55,13 +50,12 @@ public class Usage {
 		this.megabytesLeft = megabytesLeft;
 		this.smsLeft = smsLeft;
 		this.minutesLeft = minutesLeft;
-		//this.customerServiceId = customerServiceId;
+		// this.customerServiceId = customerServiceId;
 		this.customerServiceId = customerMobilePlan;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL )
-	@JoinColumn(name = "customer_service_id", referencedColumnName = "id" )
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "customer_service_id", referencedColumnName = "id")
 	private CustomerMobilePlan customerServiceId;
-	// private CustomerMobilePlan customerServiceRelations;
 
 }

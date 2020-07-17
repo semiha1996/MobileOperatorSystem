@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sap.practice.mobilesystem.entity.Payings;
-import sap.practice.mobilesystem.entity.Usage;
 import sap.practice.mobilesystem.repository.PayingsRepository;
 
 @Service
@@ -17,7 +16,7 @@ public class PayingsService {
 		List<Payings> payings = repository.findAll();
 		return payings;
 	}
-	
+
 	public void savePayings(Payings paying) {
 		repository.saveAndFlush(paying);
 	}

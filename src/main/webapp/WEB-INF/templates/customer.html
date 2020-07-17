@@ -11,8 +11,8 @@
 <body>
 	<form th:action="@{|/updateCustomer?id=${customer.customerId}|}"
 		th:object="${customer}" method="post" style="width: 48%; float: left">
-		<input type="hidden" th:field="*{password}" />
-		<input type="hidden" th:field="*{role}" />
+		<input type="hidden" th:field="*{password}" /> <input type="hidden"
+			th:field="*{role}" />
 		<div class="inputs_div">
 			<label class="label" style="float: left; margin-right: 10px">Name:</label>
 			<input type="text" th:field="*{name}" class="text_field"
@@ -41,7 +41,7 @@
 			<label class="label" style="float: left; margin-right: 10px">User
 				Name:</label> <input type="text" th:field="*{username}" class="text_field"
 				style="float: left; margin-right: 10px"
-				placeholder="Enter customer user name" /> 
+				placeholder="Enter customer user name" />
 		</div>
 		<div class="inputs_div">
 			<label class="label" style="float: left; margin-right: 10px">E-mail:</label>
@@ -51,23 +51,24 @@
 		</div>
 
 		<div class="inputs_div">
-		<input type="hidden" th:field="${customerCurrentPlanId.planId}" />
-			<label class="label" style="float: left; margin-right: 10px">Service:</label>
-			<select th:field="*{services.serviceId}" class="dropdown dropdown_float"
+			<input type="hidden" th:field="${customerCurrentPlanId.planId}" /> <label
+				class="label" style="float: left; margin-right: 10px">Service:</label>
+			<select th:field="*{services.serviceId}"
+				class="dropdown dropdown_float"
 				style="float: left; margin-right: 10px">
 				<option th:each="service : ${services}"
 					th:value="${service.serviceId}" th:text="${service.name}"
-					th:selected="${service.name == customer.services.name}">
-				</option>
+					th:selected="${service.name == customer.services.name}"></option>
 			</select>
 		</div>
 		<input type="submit" class="button" value="Update" />
 	</form>
-	
+
 	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
 		style="width: 100%; float: left;">
 		<div class="exit_div">
-			<input type="submit" class="button button_float_customer" value="Log out" />
+			<input type="submit" class="button button_float_customer"
+				value="Log out" />
 		</div>
 </body>
 </html>

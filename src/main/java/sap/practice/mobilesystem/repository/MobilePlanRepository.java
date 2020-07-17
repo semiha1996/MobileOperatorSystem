@@ -12,7 +12,7 @@ import sap.practice.mobilesystem.entity.MobilePlan;
 public interface MobilePlanRepository extends JpaRepository<MobilePlan, Long> {
 	@Query("SELECT a FROM MobilePlan a WHERE a.serviceId = :id")
 	List<MobilePlan> getPlanById(@Param("id") Long id);
-	
+
 	@Query("SELECT a FROM MobilePlan a WHERE lower(a.name) LIKE %:searchTerm%")
 	List<MobilePlan> getAllPlansByName(@Param("searchTerm") String searchTerm);
 

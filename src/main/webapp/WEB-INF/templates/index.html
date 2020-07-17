@@ -11,18 +11,22 @@
 </head>
 <body>
 	<h1>Welcome to our home page!</h1>
-	
-	<form th:if="${isLogged == false}" th:action="@{/login}" style="width: 100%; float: left;">
+
+	<form th:if="${isLogged == false}" th:action="@{/login}"
+		style="width: 100%; float: left;">
 		<div class="inquire_div">
-			<input type="submit" class="button" style="margin-right: 50px" value="Login" />
+			<input type="submit" class="button" style="margin-right: 50px"
+				value="Login" />
 		</div>
 	</form>
-	
-	<form th:if="${isLogged == true}" th:action="@{/tryLogout}" method="post" style="width: 100%; float: left;">
+
+	<form th:if="${isLogged == true}" th:action="@{/tryLogout}"
+		method="post" style="width: 100%; float: left;">
 		<div class="inquire_div">
-			<input type="submit" class="button" style="margin-right: 50px" value="Logout" />
+			<input type="submit" class="button" style="margin-right: 50px"
+				value="Logout" />
 		</div>
 	</form>
-	
+
 </body>
 </html>

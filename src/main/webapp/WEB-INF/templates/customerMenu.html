@@ -12,7 +12,8 @@
 <body>
 	<div>
 		<h3 th:text="'Hello, '  + ${customer.name}"></h3>
-		<label class="label label_menu1 label_customer_menu">Your current mobile plan:</label>
+		<label class="label label_menu1 label_customer_menu">Your
+			current mobile plan:</label>
 		<table>
 			<tr>
 				<th>Id</th>
@@ -24,7 +25,7 @@
 				<th>Period Activation</th>
 			</tr>
 			<tr>
-			    <td th:text="${service.serviceId}">Id</td>
+				<td th:text="${service.serviceId}">Id</td>
 				<td th:text="${service.name}">Name</td>
 				<td th:text="${service.megabytes}">Megabytes</td>
 				<td th:text="${service.smsNumber}">SMS</td>
@@ -34,7 +35,8 @@
 			</tr>
 		</table>
 	</div>
-	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.21%" />
+	<hr id="menu_separator"
+		style="float: left; width: 110%; margin-top: 0.21%" />
 	<div>
 		<label class="label label_menu1 label_customer_menu">Left:</label>
 		<table>
@@ -51,23 +53,25 @@
 		</table>
 	</div>
 
-	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.1%" />
+	<hr id="menu_separator"
+		style="float: left; width: 110%; margin-top: 0.1%" />
 	<div>
-		<label class="label label_menu1 label_customer_menu" >You should pay until:</label>
-		<span th:text="${usage.dateToBePayed}" class="label label_menu1 label_value"></span>
+		<label class="label label_menu1 label_customer_menu">You
+			should pay until:</label> <span th:text="${usage.dateToBePayed}"
+			class="label label_menu1 label_value"></span>
 	</div>
 
 
-	<hr id="menu_separator" style="float: left; width: 110%; margin-top: 0.09%" />
+	<hr id="menu_separator"
+		style="float: left; width: 110%; margin-top: 0.09%" />
 
 
 
 	<form th:action="@{/updateCustomerData}" th:object="${customer}"
 		method="post" style="width: 50%; float: left">
-		<input type="hidden" th:field="*{customerId}"/>
-		<input type="hidden" th:field="*{services}"/>
-		<input type="hidden" th:field="*{role}" />
-		
+		<input type="hidden" th:field="*{customerId}" /> <input type="hidden"
+			th:field="*{services}" /> <input type="hidden" th:field="*{role}" />
+
 		<div class="inputs_div">
 			<label class="label_menu">Name:</label> <input type="text"
 				th:field="*{name}" class="text_field"

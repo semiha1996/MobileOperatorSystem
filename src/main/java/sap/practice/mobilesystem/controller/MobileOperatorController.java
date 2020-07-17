@@ -1,20 +1,14 @@
 package sap.practice.mobilesystem.controller;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,10 +67,10 @@ public class MobileOperatorController {
 				model.addAttribute("service", new MobilePlan());
 				return "menu";
 			} else {
-				return "index";
+				return "redirect:/index";
 			}
 		} else {
-			return "index";
+			return "redirect:/index";
 		}
 	}
 
@@ -173,10 +167,10 @@ public class MobileOperatorController {
 
 				return "customer";
 			} else {
-				return "index";
+				return "redirect:/index";
 			}
 		} else {
-			return "index";
+			return "redirect:/index";
 		}
 	}
 
@@ -188,11 +182,6 @@ public class MobileOperatorController {
 
 		List<MobilePlan> mobilePlans = mobilePlanService.getMobilePlansById(newServiceId);
 		if (mobilePlans.size() > 0) {
-
-			List<CustomerMobilePlan> customerServiceEntities = customerMobilePlanService
-					.getAllCustomerMobilePlansById(customer.getCustomerId(), customerCurrentPlanId.getPlanId());
-
-			System.out.println(customerServiceEntities.get(0).getId());
 
 			customer.setServices(mobilePlans.get(0));
 		}
@@ -239,10 +228,10 @@ public class MobileOperatorController {
 
 				return "customerMenu";
 			} else {
-				return "index";
+				return "redirect:/index";
 			}
 		} else {
-			return "index";
+			return "redirect:/index";
 		}
 	}
 
@@ -278,59 +267,60 @@ public class MobileOperatorController {
 				model.addAttribute("customers", duePayCustomers);
 				return "search";
 			} else {
-				return "index";
+				return "redirect:/index";
 			}
 		} else {
-			return "index";
-		}
-	}
-
-	@GetMapping(value = "/login") 
-	public String getloginPage(Model model, HttpSession session) {
-		if (session.getAttribute("ROLE") == null && session.getAttribute("ID") == null) {
-			model.addAttribute("customer", new Customer()); 
-			return "login"; 
-		}
-		else {
 			return "redirect:/index";
 		}
 	}
-	
+
+	@GetMapping(value = "/login")
+	public String getloginPage(Model model, HttpSession session) {
+		if (session.getAttribute("ROLE") == null && session.getAttribute("ID") == null) {
+			model.addAttribute("customer", new Customer());
+			if (session.getAttribute("ERROR") != null) {
+				model.addAttribute("loginError", true);
+				session.removeAttribute("ERROR");
+			}
+			return "login";
+		} else {
+			return "redirect:/index";
+		}
+	}
+
 	@PostMapping(value = "/tryLogin")
-	public String tryLogin(@ModelAttribute Customer customer, HttpServletRequest request) {
-		List<Customer> customers = 
-				userService.getCustomersByUserNamePassword(customer.getUsername(), customer.getPassword());
-		if(customers.size() > 0) {
+	public String tryLogin(@ModelAttribute Customer customer, HttpServletRequest request, Model model) {
+		List<Customer> customers = userService.getCustomersByUserNamePassword(customer.getUsername(),
+				customer.getPassword());
+		if (customers.size() > 0) {
 			Customer foundCustomer = customers.get(0);
 			request.getSession().setAttribute("ID", foundCustomer.getCustomerId());
 			request.getSession().setAttribute("ROLE", foundCustomer.getRole());
-			if(foundCustomer.getRole().equals("operator")) {
+			if (foundCustomer.getRole().equals("operator")) {
 				return "redirect:/menu";
-			}
-			else if(foundCustomer.getRole().equals("customer")) {
+			} else if (foundCustomer.getRole().equals("customer")) {
 				return "redirect:/customerMenu";
-			}
-			else {
+			} else {
 				return "redirect:/index";
 			}
 		}
-		return "redirect:/index";
+		request.getSession().setAttribute("ERROR", true);
+		return "redirect:/login";
 	}
-	
+
 	@PostMapping(value = "/tryLogout")
 	public String tryLogout(HttpServletRequest request) {
 		request.getSession().invalidate();
 		System.out.println("Session Over");
 		return "redirect:/index";
 	}
-	
+
 	@GetMapping(value = "/index")
 	public String getHomePage(Model model, HttpSession session) {
 		if (session.getAttribute("ROLE") == null && session.getAttribute("ID") == null) {
-			model.addAttribute("isLogged", false); 
-		}
-		else {
-			model.addAttribute("isLogged", true); 
+			model.addAttribute("isLogged", false);
+		} else {
+			model.addAttribute("isLogged", true);
 		}
 		return "index";
 	}

@@ -37,8 +37,7 @@ public class Payings {
 	public Payings() {
 	}
 
-	public Payings(Long id, Date dateOfPaying, Long customer_serviceId,
-			CustomerMobilePlan customerServiceRelations) {
+	public Payings(Long id, Date dateOfPaying, Long customer_serviceId, CustomerMobilePlan customerServiceRelations) {
 		super();
 		this.id = id;
 		this.dateOfPaying = dateOfPaying;

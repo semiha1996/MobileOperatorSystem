@@ -56,13 +56,13 @@
 			<td th:text="${service.periodOfActivation}">Period Activation</td>
 		</tr>
 	</table>
-	
+
 	<table th:if="${searchTerm.searchCategory == 'Inquire'}">
 		<tr>
 			<th>Id</th>
 			<th>Name</th>
 			<th>Address</th>
-			<th>Phone</th>		
+			<th>Phone</th>
 			<th>Email</th>
 		</tr>
 
@@ -75,7 +75,7 @@
 			<td th:text="${customer.email}">Email</td>
 		</tr>
 	</table>
-	
+
 	<form th:action="@{/tryLogout}" th:object="${service}" method="post"
 		style="width: 100%; float: left;">
 		<div class="exit_div">

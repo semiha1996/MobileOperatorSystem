@@ -1,7 +1,5 @@
 package sap.practice.mobilesystem.entity;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,5 +45,4 @@ public class CustomerMobilePlan {
 	@OneToMany(mappedBy = "customerServiceRelations", cascade = CascadeType.ALL)
 	private List<Payings> payings;
 
-	
 }

@@ -1,7 +1,5 @@
 package sap.practice.mobilesystem.entity;
 
-import java.beans.Transient;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -50,7 +47,7 @@ public class Customer {
 
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "customer_role")
 	private String role;
 
